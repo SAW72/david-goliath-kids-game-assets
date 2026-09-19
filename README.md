@@ -1,29 +1,26 @@
 # David & Goliath – Toddler Web Game 💛
-### Fully polished with voices & harp music for a 3-year-old girl’s iPad
+### Fully polished with voices, harp music & more for a 3-year-old girl’s iPad
 
-**David loved to play the harp** (1 Samuel 16) — so soft harp music plays throughout the game!
+**David played the harp** — so soft harp music plays the whole time!
 
-## ✨ Features
-- Soft harp background music (looping gently)
-- Warm female narrator voice for story scenes
-- Young boy voice for David’s own words from Scripture
-- Celebration voice + confetti on victory
-- Harp pluck sound when she taps sheep / stones / brave David
-- Mute button (top right) so you control volume
-- All previous polish: stars, mini-games, big buttons, soft colors
+## ✨ Latest Polish
+- Soft looping harp background music (David’s instrument)
+- Warm female narrator
+- Character voices: Jesse (kind dad), Saul, David (boy voice), Goliath (gentle challenge), soft lion & bear, cute sheep “Baa!”
+- Volume slider + mute button
+- Better voice timing (narration → character → sound effects)
+- Harp pluck + sheep baa on mini-game taps
+- Confetti + celebration voice on victory
+- All previous features: stars, big buttons, mini-games, soft colors
 
-## Play now
-Open **index.html** on the iPad (Safari → Add to Home Screen for best experience).
+## Play
+Open **index.html** on iPad Safari → Add to Home Screen.
 
-Story order still starts with Jesse → sheep → **lion** → **bear** → Saul → Goliath → victory, exactly as Scripture and as you requested.
+Story starts with Jesse → sheep → lion → bear → Saul → Goliath → victory (exactly as Scripture + your request).
 
-## Audio files (assets/audio/)
-- soft_harp_bg.mp3 – gentle harp ambient (David’s instrument!)
-- harp_note.mp3 – cute pluck for taps
-- narr_*.mp3 – story narrator
-- david_*.mp3 – David speaking the real lines
-- celebrate.mp3 – happy ending
+## Audio (assets/audio/)
+soft_harp_bg.mp3, harp_note.mp3, narr_*, david_*, jesse_voice, saul_voice, goliath_challenge, sheep_baa, lion_soft, bear_soft, celebrate.mp3
 
-Everything stays 100% faithful to the Hebrew of 1 Samuel 17.
+100% faithful to the Hebrew of 1 Samuel 17. Soft & joyful for little ones.
 
-Made with love for your little girl ✨
+Made with love ✨
