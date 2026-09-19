@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>David & Goliath – The Battle is the LORD’s!</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(180deg, #87CEEB 0%, #E0F7FA 40%, #FFF8E1 100%);
+      touch-action: manipulation;
+    }
+    #app {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; position: relative;
+    }
+
+    /* Title Screen */
+    #title-screen {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 10;
+      background: linear-gradient(180deg, #87CEEB, #E0F7FA, #FFF8E1);
+      transition: opacity 0.6s ease;
+    }
+    #title-screen.hidden { opacity: 0; pointer-events: none; }
+    #title-screen img {
+      width: 92%; max-width: 900px; border-radius: 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+      margin-bottom: 24px;
+    }
+    .big-btn {
+      font-size: 2.2rem; font-weight: 800; padding: 22px 60px;
+      border: none; border-radius: 999px; cursor: pointer;
+      background: linear-gradient(135deg, #FF9A3C, #FF6B6B);
+      color: white; box-shadow: 0 8px 0 #E05555, 0 12px 30px rgba(0,0,0,0.25);
+      transition: transform 0.15s, box-shadow 0.15s;
+      -webkit-user-select: none; user-select: none;
+    }
+    .big-btn:active { transform: translateY(6px); box-shadow: 0 2px 0 #E05555, 0 6px 15px rgba(0,0,0,0.2); }
+    .big-btn.green { background: linear-gradient(135deg, #4CAF50, #2E7D32); box-shadow: 0 8px 0 #1B5E20, 0 12px 30px rgba(0,0,0,0.25); }
+    .big-btn.green:active { box-shadow: 0 2px 0 #1B5E20, 0 6px 15px rgba(0,0,0,0.2); }
+
+    /* Video Player Area */
+    #player-area {
+      display: none; flex-direction: column; align-items: center;
+      width: 100%; height: 100%; padding: 12px; position: relative;
+    }
+    #player-area.active { display: flex; }
+    video {
+      width: 100%; max-height: 72vh; border-radius: 20px;
+      background: #000; box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      object-fit: contain;
+    }
+    #progress {
+      margin-top: 12px; font-size: 1.4rem; font-weight: 700;
+      color: #5D4037; text-shadow: 0 1px 2px white;
+    }
+    #controls {
+      margin-top: 16px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+    }
+    #memory {
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(255,255,255,0.9); padding: 10px 24px; border-radius: 50px;
+      font-size: 1.3rem; font-weight: 800; color: #1565C0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: none;
+    }
+    #memory.show { display: block; }
+
+    /* End Screen */
+    #end-screen {
+      display: none; position: absolute; inset: 0; flex-direction: column;
+      align-items: center; justify-content: center; background: linear-gradient(180deg, #FFF8E1, #E8F5E9);
+      z-index: 20; text-align: center; padding: 20px;
+    }
+    #end-screen.active { display: flex; }
+    #end-screen h1 { font-size: 2.8rem; color: #2E7D32; margin-bottom: 12px; }
+    #end-screen p { font-size: 1.6rem; color: #5D4037; margin-bottom: 30px; max-width: 600px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Title Screen -->
+    <div id="title-screen">
+      <img src="assets/title.jpg" alt="David & Goliath – The Battle is the LORD’s!">
+      <button class="big-btn" id="start-btn">▶ Play Story</button>
+    </div>
+
+    <!-- Video Player -->
+    <div id="player-area">
+      <video id="video" playsinline webkit-playsinline controlsList="nodownload nofullscreen noremoteplayback"></video>
+      <div id="progress">Scene 1 of 7</div>
+      <div id="controls">
+        <button class="big-btn green" id="next-btn">Next ▶</button>
+        <button class="big-btn" id="replay-btn" style="background:linear-gradient(135deg,#42A5F5,#1E88E5);box-shadow:0 8px 0 #1565C0,0 12px 30px rgba(0,0,0,0.25);">🔄 Again</button>
+      </div>
+      <div id="memory">The battle is the LORD’s! ✨</div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen">
+      <h1>Yay! 🎉</h1>
+      <p>David trusted God and won!<br>The battle is the LORD’s!</p>
+      <button class="big-btn green" id="restart-btn">Play Again ❤️</button>
+    </div>
+  </div>
+
+  <script>
+    // Story order for 3-year-old – starts with Jesse, lion & bear first as requested
+    const scenes = [
+      { file: "videos/08-jesse-sends-david.mp4", title: "Jesse sends David" },
+      { file: "videos/03-david-with-sheep.mp4", title: "David the Shepherd" },
+      { file: "videos/05-david-fights-lion.mp4", title: "David & the Lion" },
+      { file: "videos/06-david-fights-bear.mp4", title: "David & the Bear" },
+      { file: "videos/07-david-tells-saul-lion-bear.mp4", title: "David tells Saul" },
+      { file: "videos/02-goliath-philistine-champion.mp4", title: "Goliath challenges" },
+      { file: "videos/04-david-vs-goliath-victory.mp4", title: "The Victory!" }
+    ];
+
+    let current = 0;
+    const video = document.getElementById("video");
+    const progress = document.getElementById("progress");
+    const titleScreen = document.getElementById("title-screen");
+    const playerArea = document.getElementById("player-area");
+    const endScreen = document.getElementById("end-screen");
+    const memory = document.getElementById("memory");
+
+    function showScene(index) {
+      if (index >= scenes.length) {
+        playerArea.classList.remove("active");
+        endScreen.classList.add("active");
+        return;
+      }
+      current = index;
+      video.src = scenes[current].file;
+      progress.textContent = `Scene ${current + 1} of ${scenes.length} • ${scenes[current].title}`;
+      memory.classList.toggle("show", current === scenes.length - 1);
+      video.load();
+      video.play().catch(() => {}); // autoplay may be blocked, but ok on tap
+    }
+
+    document.getElementById("start-btn").addEventListener("click", () => {
+      titleScreen.classList.add("hidden");
+      setTimeout(() => {
+        titleScreen.style.display = "none";
+        playerArea.classList.add("active");
+        showScene(0);
+      }, 500);
+    });
+
+    document.getElementById("next-btn").addEventListener("click", () => {
+      showScene(current + 1);
+    });
+
+    document.getElementById("replay-btn").addEventListener("click", () => {
+      video.currentTime = 0;
+      video.play();
+    });
+
+    document.getElementById("restart-btn").addEventListener("click", () => {
+      endScreen.classList.remove("active");
+      playerArea.classList.add("active");
+      showScene(0);
+    });
+
+    // Auto-advance a few seconds after video ends (gives toddler time)
+    video.addEventListener("ended", () => {
+      setTimeout(() => {
+        if (current < scenes.length - 1) {
+          // gentle auto next only if they don't tap
+          // (commented for toddler control – parent can decide)
+          // showScene(current + 1);
+        }
+      }, 1500);
+    });
+
+    // Prevent pinch zoom etc on iPad
+    document.addEventListener("gesturestart", e => e.preventDefault());
+  </script>
+</body>
+</html>

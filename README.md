@@ -52,3 +52,29 @@ MIT — free to use for your family game and kids ministry.
 
 Created with love for a brave little girl who loves Jesus and her iPad ✨  
 September 2026
+
+---
+
+## 🎮 Ready-to-Play Web App (for iPad)
+
+Open **index.html** on any modern browser / iPad Safari.
+
+### How to play with your 3-year-old
+1. Open the page full-screen on the iPad.
+2. Big orange **▶ Play Story** button.
+3. Videos play in gentle order starting from Jesse → sheep → lion → bear → Saul → Goliath → victory.
+4. Big green **Next ▶** button after each scene.
+5. Happy end screen with “Play Again”.
+
+### Features for toddlers
+- Huge colorful buttons
+- No keyboard / no complicated menus
+- Soft colors & happy ending
+- Memory verse shown on victory: “The battle is the LORD’s!”
+- Fully offline once loaded (videos are local)
+
+### Live Demo (GitHub Pages)
+After enabling Pages on this repo, visit:  
+https://SAW72.github.io/david-goliath-kids-game-assets/
+
+---
