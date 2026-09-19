@@ -9,26 +9,18 @@
   <title>David & Goliath – The Battle is the LORD’s!</title>
   <style>
     :root {
-      --sky: #87CEEB;
-      --cream: #FFF8E1;
-      --orange: #FF9A3C;
-      --red: #FF6B6B;
-      --green: #4CAF50;
-      --darkgreen: #2E7D32;
-      --brown: #5D4037;
-      --blue: #1E88E5;
+      --sky: #87CEEB; --cream: #FFF8E1; --orange: #FF9A3C; --red: #FF6B6B;
+      --green: #4CAF50; --darkgreen: #2E7D32; --brown: #5D4037; --blue: #1E88E5;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
     html, body {
       width: 100%; height: 100%; overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(180deg, var(--sky) 0%, #E0F7FA 45%, var(--cream) 100%);
-      touch-action: manipulation;
-      position: fixed; inset: 0;
+      touch-action: manipulation; position: fixed; inset: 0;
     }
     #app { width: 100%; height: 100%; position: relative; }
 
-    /* ===== TITLE SCREEN ===== */
     #title-screen {
       position: absolute; inset: 0; display: flex; flex-direction: column;
       align-items: center; justify-content: center; z-index: 100;
@@ -39,8 +31,7 @@
     #title-screen img {
       width: min(94vw, 920px); border-radius: 28px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-      animation: float 4s ease-in-out infinite;
-      margin-bottom: 28px;
+      animation: float 4s ease-in-out infinite; margin-bottom: 28px;
     }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
     .big-btn {
@@ -49,47 +40,36 @@
       color: white; letter-spacing: 0.5px;
       box-shadow: 0 10px 0 rgba(0,0,0,0.2), 0 18px 40px rgba(0,0,0,0.25);
       transition: transform 0.12s, box-shadow 0.12s;
-      -webkit-user-select: none;
     }
     .big-btn:active { transform: translateY(8px); box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.2); }
     .btn-play { background: linear-gradient(135deg, var(--orange), var(--red)); }
     .btn-green { background: linear-gradient(135deg, var(--green), var(--darkgreen)); }
     .btn-blue { background: linear-gradient(135deg, #42A5F5, var(--blue)); }
 
-    /* ===== PLAYER ===== */
     #player-area {
       display: none; flex-direction: column; align-items: center;
-      width: 100%; height: 100%; padding: env(safe-area-inset-top) 12px 12px;
-      position: relative;
+      width: 100%; height: 100%; padding: env(safe-area-inset-top) 12px 12px; position: relative;
     }
     #player-area.active { display: flex; }
     #video-wrap {
-      position: relative; width: 100%; max-height: 68vh;
+      position: relative; width: 100%; max-height: 65vh;
       border-radius: 24px; overflow: hidden;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-      background: #111;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3); background: #111;
     }
-    video {
-      width: 100%; height: auto; max-height: 68vh; display: block;
-      object-fit: contain; background: #000;
-    }
+    video { width: 100%; height: auto; max-height: 65vh; display: block; object-fit: contain; background: #000; }
     #progress-bar {
       position: absolute; bottom: 0; left: 0; height: 6px;
       background: linear-gradient(90deg, var(--orange), var(--green));
-      width: 0%; transition: width 0.3s linear; border-radius: 0 3px 0 0;
+      width: 0%; transition: width 0.3s linear;
     }
-    #stars {
-      display: flex; gap: 10px; margin: 14px 0 6px; font-size: 1.8rem;
-    }
+    #stars { display: flex; gap: 10px; margin: 12px 0 6px; font-size: 1.8rem; }
     .star { opacity: 0.25; transition: all 0.4s; filter: grayscale(1); }
     .star.lit { opacity: 1; filter: none; transform: scale(1.2); }
     #scene-label {
       font-size: clamp(1.1rem, 3.5vw, 1.5rem); font-weight: 800;
-      color: var(--brown); text-shadow: 0 1px 3px white; margin-bottom: 8px;
+      color: var(--brown); text-shadow: 0 1px 3px white; margin-bottom: 6px;
     }
-    #controls {
-      display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; margin-top: 8px;
-    }
+    #controls { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
     #memory {
       position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%) scale(0.8);
       background: rgba(255,255,255,0.95); padding: 14px 32px; border-radius: 50px;
@@ -99,22 +79,14 @@
     }
     #memory.show { opacity: 1; transform: translateX(-50%) scale(1); }
 
-    /* ===== INTERACTIVE MINI-GAMES ===== */
     #mini {
       display: none; position: absolute; inset: 0; z-index: 50;
       background: rgba(255,248,225,0.97); flex-direction: column;
-      align-items: center; justify-content: center; padding: 20px;
-      text-align: center;
+      align-items: center; justify-content: center; padding: 20px; text-align: center;
     }
     #mini.active { display: flex; }
-    #mini h2 {
-      font-size: clamp(1.8rem, 5vw, 2.4rem); color: var(--brown);
-      margin-bottom: 20px; text-shadow: 0 2px 0 white;
-    }
-    #mini-grid {
-      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
-      max-width: 700px; margin-bottom: 30px;
-    }
+    #mini h2 { font-size: clamp(1.8rem, 5vw, 2.4rem); color: var(--brown); margin-bottom: 20px; }
+    #mini-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; max-width: 700px; margin-bottom: 30px; }
     .tap-item {
       width: 140px; height: 140px; border-radius: 50%;
       background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
@@ -125,12 +97,9 @@
     .tap-item img { width: 90%; height: 90%; object-fit: contain; border-radius: 50%; }
     .tap-item:active { transform: scale(0.9); }
     .tap-item.done { background: #C8E6C9; border-color: var(--green); transform: scale(1.05); }
-    #mini-next {
-      display: none; margin-top: 10px;
-    }
+    #mini-next { display: none; margin-top: 10px; }
     #mini-next.show { display: block; }
 
-    /* ===== END SCREEN ===== */
     #end-screen {
       display: none; position: absolute; inset: 0; z-index: 80;
       flex-direction: column; align-items: center; justify-content: center;
@@ -138,36 +107,30 @@
       text-align: center; padding: 20px; overflow: hidden;
     }
     #end-screen.active { display: flex; }
-    #end-screen h1 {
-      font-size: clamp(2.5rem, 8vw, 4rem); color: var(--darkgreen);
-      margin-bottom: 12px; animation: bounce 1s infinite alternate;
-    }
+    #end-screen h1 { font-size: clamp(2.5rem, 8vw, 4rem); color: var(--darkgreen); margin-bottom: 12px; animation: bounce 1s infinite alternate; }
     @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.08)} }
-    #end-screen p {
-      font-size: clamp(1.3rem, 4vw, 1.8rem); color: var(--brown);
-      margin-bottom: 30px; max-width: 520px; line-height: 1.4;
-    }
+    #end-screen p { font-size: clamp(1.3rem, 4vw, 1.8rem); color: var(--brown); margin-bottom: 30px; max-width: 520px; line-height: 1.4; }
     #confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .c-piece { position: absolute; width: 12px; height: 12px; top: -20px; border-radius: 2px; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0.3; } }
 
-    /* Confetti pieces */
-    .c-piece {
-      position: absolute; width: 12px; height: 12px; top: -20px;
-      border-radius: 2px; animation: fall linear forwards;
-    }
-    @keyframes fall {
-      to { transform: translateY(110vh) rotate(720deg); opacity: 0.3; }
+    #mute-btn {
+      position: absolute; top: 16px; right: 16px; z-index: 200;
+      width: 52px; height: 52px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,0.85); font-size: 1.6rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div id="app">
-    <!-- TITLE -->
+    <button id="mute-btn" title="Mute / Unmute">🔊</button>
+
     <div id="title-screen">
       <img src="assets/title.jpg" alt="David & Goliath – The Battle is the LORD’s!">
       <button class="big-btn btn-play" id="start-btn">▶ Play Story</button>
     </div>
 
-    <!-- VIDEO PLAYER -->
     <div id="player-area">
       <div id="scene-label">Scene 1 of 7</div>
       <div id="stars"></div>
@@ -182,14 +145,12 @@
       <div id="memory">✨ The battle is the LORD’s! ✨</div>
     </div>
 
-    <!-- MINI GAME OVERLAY -->
     <div id="mini">
       <h2 id="mini-title">Tap the happy sheep!</h2>
       <div id="mini-grid"></div>
       <button class="big-btn btn-green" id="mini-next">Yay! Next ▶</button>
     </div>
 
-    <!-- END -->
     <div id="end-screen">
       <div id="confetti"></div>
       <h1>Yay! 🎉</h1>
@@ -198,35 +159,45 @@
     </div>
   </div>
 
+  <!-- AUDIO -->
+  <audio id="bg-music" loop preload="auto" src="assets/audio/soft_harp_bg.mp3"></audio>
+  <audio id="harp-note" preload="auto" src="assets/audio/harp_note.mp3"></audio>
+  <audio id="narr" preload="auto"></audio>
+  <audio id="david-voice" preload="auto"></audio>
+  <audio id="celebrate" preload="auto" src="assets/audio/celebrate.mp3"></audio>
+
   <script>
-    // Full story order – starts with Jesse + lion & bear as requested
     const scenes = [
-      { file: "videos/08-jesse-sends-david.mp4",    label: "Jesse sends David",     mini: null },
-      { file: "videos/03-david-with-sheep.mp4",      label: "David & the Sheep",     mini: "sheep" },
-      { file: "videos/05-david-fights-lion.mp4",     label: "David & the Lion",      mini: null },
-      { file: "videos/06-david-fights-bear.mp4",     label: "David & the Bear",      mini: null },
-      { file: "videos/07-david-tells-saul-lion-bear.mp4", label: "David tells Saul", mini: "brave" },
-      { file: "videos/02-goliath-philistine-champion.mp4", label: "Goliath challenges", mini: "stone" },
-      { file: "videos/04-david-vs-goliath-victory.mp4", label: "Victory!",            mini: null }
+      { file: "videos/08-jesse-sends-david.mp4",    label: "Jesse sends David",     narr: "assets/audio/narr_jesse.mp3",     david: null, mini: null },
+      { file: "videos/03-david-with-sheep.mp4",      label: "David & the Sheep",     narr: "assets/audio/narr_sheep.mp3",     david: null, mini: "sheep" },
+      { file: "videos/05-david-fights-lion.mp4",     label: "David & the Lion",      narr: "assets/audio/narr_lion.mp3",      david: null, mini: null },
+      { file: "videos/06-david-fights-bear.mp4",     label: "David & the Bear",      narr: "assets/audio/narr_bear.mp3",      david: null, mini: null },
+      { file: "videos/07-david-tells-saul-lion-bear.mp4", label: "David tells Saul", narr: null, david: "assets/audio/david_saul.mp3", mini: "brave" },
+      { file: "videos/02-goliath-philistine-champion.mp4", label: "Goliath challenges", narr: "assets/audio/narr_goliath.mp3", david: null, mini: "stone" },
+      { file: "videos/04-david-vs-goliath-victory.mp4", label: "Victory!",            narr: null, david: "assets/audio/david_victory.mp3", mini: null }
     ];
 
     let current = 0;
-    let video = document.getElementById("video");
-    let progressBar = document.getElementById("progress-bar");
-    let sceneLabel = document.getElementById("scene-label");
-    let starsEl = document.getElementById("stars");
-    let memory = document.getElementById("memory");
-    let mini = document.getElementById("mini");
-    let miniGrid = document.getElementById("mini-grid");
-    let miniTitle = document.getElementById("mini-title");
-    let miniNext = document.getElementById("mini-next");
+    let muted = false;
+    const video = document.getElementById("video");
+    const progressBar = document.getElementById("progress-bar");
+    const sceneLabel = document.getElementById("scene-label");
+    const starsEl = document.getElementById("stars");
+    const memory = document.getElementById("memory");
+    const mini = document.getElementById("mini");
+    const miniGrid = document.getElementById("mini-grid");
+    const miniTitle = document.getElementById("mini-title");
+    const miniNext = document.getElementById("mini-next");
+    const bgMusic = document.getElementById("bg-music");
+    const harpNote = document.getElementById("harp-note");
+    const narr = document.getElementById("narr");
+    const davidVoice = document.getElementById("david-voice");
+    const celebrate = document.getElementById("celebrate");
 
     // Build stars
     scenes.forEach((_, i) => {
       const s = document.createElement("span");
-      s.className = "star";
-      s.textContent = "⭐";
-      s.id = "star-" + i;
+      s.className = "star"; s.textContent = "⭐"; s.id = "star-" + i;
       starsEl.appendChild(s);
     });
 
@@ -234,6 +205,17 @@
       for (let i = 0; i < scenes.length; i++) {
         document.getElementById("star-" + i).classList.toggle("lit", i <= upTo);
       }
+    }
+
+    function playAudio(el, src) {
+      if (muted) return;
+      el.src = src;
+      el.volume = 0.9;
+      el.play().catch(()=>{});
+    }
+
+    function stopVoices() {
+      narr.pause(); davidVoice.pause();
     }
 
     function showScene(idx) {
@@ -244,6 +226,7 @@
       }
       current = idx;
       const sc = scenes[current];
+      stopVoices();
       video.src = sc.file;
       sceneLabel.textContent = `Scene ${current+1} of ${scenes.length} • ${sc.label}`;
       lightStars(current);
@@ -251,96 +234,74 @@
       progressBar.style.width = "0%";
       video.load();
       video.play().catch(()=>{});
+
+      // Play narration or David voice after short delay so video starts first
+      setTimeout(() => {
+        if (sc.narr) playAudio(narr, sc.narr);
+        if (sc.david) playAudio(davidVoice, sc.david);
+      }, 800);
     }
 
-    // Progress bar
     video.addEventListener("timeupdate", () => {
-      if (video.duration) {
-        progressBar.style.width = (video.currentTime / video.duration * 100) + "%";
-      }
+      if (video.duration) progressBar.style.width = (video.currentTime / video.duration * 100) + "%";
     });
 
-    // After video ends → maybe mini-game then next
     video.addEventListener("ended", () => {
       const sc = scenes[current];
-      if (sc.mini) {
-        startMini(sc.mini);
-      } else {
-        // soft delay then auto-ready for next
-      }
+      if (sc.mini) startMini(sc.mini);
     });
 
-    // ===== MINI GAMES =====
+    // Mini games
     function startMini(type) {
       mini.classList.add("active");
       miniNext.classList.remove("show");
       miniGrid.innerHTML = "";
       let needed = 0, done = 0;
 
+      function makeItem(content, isImg = false) {
+        const d = document.createElement("div");
+        d.className = "tap-item";
+        if (isImg) d.innerHTML = content;
+        else d.textContent = content;
+        d.onclick = () => {
+          if (!d.classList.contains("done")) {
+            d.classList.add("done");
+            if (!muted) { harpNote.currentTime = 0; harpNote.play().catch(()=>{}); }
+            done++;
+            if (done >= needed) miniNext.classList.add("show");
+          }
+        };
+        miniGrid.appendChild(d);
+      }
+
       if (type === "sheep") {
         miniTitle.textContent = "Tap the happy sheep! 🐑";
         needed = 4;
-        for (let i = 0; i < 4; i++) {
-          const d = document.createElement("div");
-          d.className = "tap-item";
-          d.innerHTML = `<img src="assets/sheep-icon.jpg" alt="sheep">`;
-          d.onclick = () => {
-            if (!d.classList.contains("done")) {
-              d.classList.add("done");
-              done++;
-              if (done >= needed) miniNext.classList.add("show");
-            }
-          };
-          miniGrid.appendChild(d);
-        }
-      }
-      else if (type === "brave") {
+        for (let i=0; i<4; i++) makeItem(`<img src="assets/sheep-icon.jpg" alt="sheep">`, true);
+      } else if (type === "brave") {
         miniTitle.textContent = "Tap David to be brave! 💪";
         needed = 3;
-        for (let i = 0; i < 3; i++) {
-          const d = document.createElement("div");
-          d.className = "tap-item";
-          d.textContent = "🦸";
-          d.style.fontSize = "4.5rem";
-          d.onclick = () => {
-            if (!d.classList.contains("done")) {
-              d.classList.add("done");
-              d.textContent = "✨";
-              done++;
-              if (done >= needed) miniNext.classList.add("show");
-            }
-          };
-          miniGrid.appendChild(d);
-        }
-      }
-      else if (type === "stone") {
+        for (let i=0; i<3; i++) makeItem("🦸");
+      } else if (type === "stone") {
         miniTitle.textContent = "Pick 5 smooth stones! 🪨";
         needed = 5;
-        for (let i = 0; i < 5; i++) {
-          const d = document.createElement("div");
-          d.className = "tap-item";
-          d.innerHTML = `<img src="assets/sling-icon.jpg" alt="stone">`;
-          d.onclick = () => {
-            if (!d.classList.contains("done")) {
-              d.classList.add("done");
-              done++;
-              if (done >= needed) miniNext.classList.add("show");
-            }
-          };
-          miniGrid.appendChild(d);
-        }
+        for (let i=0; i<5; i++) makeItem(`<img src="assets/sling-icon.jpg" alt="stone">`, true);
       }
     }
 
     miniNext.onclick = () => {
       mini.classList.remove("active");
-      // go to next scene
       showScene(current + 1);
     };
 
-    // Buttons
+    // Start
     document.getElementById("start-btn").onclick = () => {
       document.getElementById("title-screen").classList.add("hidden");
+      // Start soft harp music (David loved the harp!)
+      if (!muted) {
+        bgMusic.volume = 0.28;
+        bgMusic.play().catch(()=>{});
+      }
       setTimeout(() => {
         document.getElementById("title-screen").style.display = "none";
         document.getElementById("player-area").classList.add("active");
@@ -350,36 +311,55 @@
 
     document.getElementById("next-btn").onclick = () => {
       const sc = scenes[current];
-      if (sc.mini && !mini.classList.contains("active")) {
-        // if mini not yet done, force it
-        startMini(sc.mini);
-      } else {
-        showScene(current + 1);
-      }
+      if (sc.mini && !mini.classList.contains("active")) startMini(sc.mini);
+      else showScene(current + 1);
     };
 
     document.getElementById("replay-btn").onclick = () => {
       video.currentTime = 0;
       video.play();
+      const sc = scenes[current];
+      setTimeout(() => {
+        if (sc.narr) playAudio(narr, sc.narr);
+        if (sc.david) playAudio(davidVoice, sc.david);
+      }, 400);
     };
 
     document.getElementById("restart-btn").onclick = () => {
       document.getElementById("end-screen").classList.remove("active");
       document.getElementById("player-area").classList.add("active");
+      if (!muted) { bgMusic.currentTime = 0; bgMusic.play().catch(()=>{}); }
       showScene(0);
     };
 
-    // Confetti
+    // Mute toggle
+    document.getElementById("mute-btn").onclick = () => {
+      muted = !muted;
+      document.getElementById("mute-btn").textContent = muted ? "🔇" : "🔊";
+      bgMusic.muted = muted;
+      narr.muted = muted;
+      davidVoice.muted = muted;
+      harpNote.muted = muted;
+      celebrate.muted = muted;
+      if (!muted && document.getElementById("player-area").classList.contains("active")) {
+        bgMusic.play().catch(()=>{});
+      }
+    };
+
     function showEnd() {
       const end = document.getElementById("end-screen");
       end.classList.add("active");
+      if (!muted) {
+        celebrate.play().catch(()=>{});
+        bgMusic.volume = 0.4;
+      }
       const conf = document.getElementById("confetti");
       conf.innerHTML = "";
       const colors = ["#FF6B6B","#FF9A3C","#4CAF50","#42A5F5","#AB47BC","#FFEE58"];
-      for (let i = 0; i < 80; i++) {
+      for (let i = 0; i < 90; i++) {
         const p = document.createElement("div");
         p.className = "c-piece";
-        p.style.left = Math.random() * 100 + "%";
+        p.style.left = Math.random()*100 + "%";
         p.style.background = colors[Math.floor(Math.random()*colors.length)];
         p.style.animationDuration = (2.5 + Math.random()*3) + "s";
         p.style.animationDelay = Math.random()*1.5 + "s";
@@ -387,7 +367,6 @@
       }
     }
 
-    // Prevent zoom / gestures on iPad
     document.addEventListener("gesturestart", e => e.preventDefault());
     document.addEventListener("dblclick", e => e.preventDefault());
   </script>

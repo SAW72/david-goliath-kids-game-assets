@@ -1,49 +1,29 @@
 # David & Goliath – Toddler Web Game 💛
-### For a 3-year-old girl’s iPad (fully polished)
+### Fully polished with voices & harp music for a 3-year-old girl’s iPad
 
-A complete, beautiful, scripture-faithful interactive story game made specially for little hands.
+**David loved to play the harp** (1 Samuel 16) — so soft harp music plays throughout the game!
 
-**Live demo / Play now**  
-Open `index.html` on any iPad / modern browser (or enable GitHub Pages).
+## ✨ Features
+- Soft harp background music (looping gently)
+- Warm female narrator voice for story scenes
+- Young boy voice for David’s own words from Scripture
+- Celebration voice + confetti on victory
+- Harp pluck sound when she taps sheep / stones / brave David
+- Mute button (top right) so you control volume
+- All previous polish: stars, mini-games, big buttons, soft colors
 
-## ✨ What you get
-- Gorgeous animated title screen
-- Full story in perfect order starting from the **lion & bear** (1 Samuel 17:34-37)
-- Soft, non-scary cartoon videos of every character
-- Three fun mini-games between scenes:
-  - Tap the happy sheep 🐑
-  - Tap David to be brave 💪
-  - Pick five smooth stones 🪨
-- Progress stars
-- Smooth video progress bar
-- Confetti celebration on victory
-- Huge colorful buttons perfect for 3-year-olds
-- “The battle is the LORD’s!” memory line
-- Fully offline once loaded
+## Play now
+Open **index.html** on the iPad (Safari → Add to Home Screen for best experience).
 
-## Story Order
-1. Jesse sends David  
-2. David with his sheep (+ sheep tap mini-game)  
-3. David & the Lion  
-4. David & the Bear  
-5. David tells King Saul (+ brave tap)  
-6. Goliath challenges (+ pick 5 stones)  
-7. Victory! Confetti & celebration
+Story order still starts with Jesse → sheep → **lion** → **bear** → Saul → Goliath → victory, exactly as Scripture and as you requested.
 
-## Files
-- `index.html` – the complete game (single file + assets)
-- `assets/title.jpg` – title art
-- `assets/sheep-icon.jpg` & `sling-icon.jpg` – mini-game icons
-- `videos/` – all 8 character videos
+## Audio files (assets/audio/)
+- soft_harp_bg.mp3 – gentle harp ambient (David’s instrument!)
+- harp_note.mp3 – cute pluck for taps
+- narr_*.mp3 – story narrator
+- david_*.mp3 – David speaking the real lines
+- celebrate.mp3 – happy ending
 
-## How to play with your daughter
-1. Open the folder on iPad Safari (or host it)
-2. Add to Home Screen for app-like feel
-3. Let her tap the big buttons – she will love the sheep and stones!
+Everything stays 100% faithful to the Hebrew of 1 Samuel 17.
 
-## Scripture fidelity
-Every video and line is kept true to the original Hebrew of 1 Samuel 17.  
-No gore, no fear – only courage, faith, and joy.
-
-Made with love for a brave little girl ✨  
-September 2026
+Made with love for your little girl ✨
