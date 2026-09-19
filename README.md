@@ -1,26 +1,28 @@
 # David & Goliath – Toddler Web Game 💛
-### Fully polished with voices, harp music & more for a 3-year-old girl’s iPad
+### 3 Levels • Birds • Harp • Voices  for a 3-year-old girl’s iPad
 
-**David played the harp** — so soft harp music plays the whole time!
+**Now with Easy / Medium / Hard levels + soft birds singing in the background!**
 
-## ✨ Latest Polish
-- Soft looping harp background music (David’s instrument)
-- Warm female narrator
-- Character voices: Jesse (kind dad), Saul, David (boy voice), Goliath (gentle challenge), soft lion & bear, cute sheep “Baa!”
-- Volume slider + mute button
-- Better voice timing (narration → character → sound effects)
-- Harp pluck + sheep baa on mini-game taps
-- Confetti + celebration voice on victory
-- All previous features: stars, big buttons, mini-games, soft colors
+## ✨ Features
+- **3 difficulty levels** (all still gentle for a 3-year-old):
+  - ⭐ **Easy** – fewer taps, slower, more gentle
+  - ⭐⭐ **Medium** – balanced (default)
+  - ⭐⭐⭐ **Hard** – more sheep, more stones, more brave taps (still fun, never scary)
+- Soft **harp music** (David played the harp)
+- Soft **birds ambient** + little tweets (Bethlehem hills!)
+- Full character voices (Jesse, Saul, David, Goliath, sheep baa, soft lion & bear)
+- Volume slider + mute
+- Mini-games scale with level
+- Confetti celebration
+- Big toddler-friendly buttons
 
 ## Play
 Open **index.html** on iPad Safari → Add to Home Screen.
 
-Story starts with Jesse → sheep → lion → bear → Saul → Goliath → victory (exactly as Scripture + your request).
+Story order: Jesse → sheep → lion → bear → Saul → Goliath → victory  
+(100% faithful to Hebrew of 1 Samuel 17)
 
-## Audio (assets/audio/)
-soft_harp_bg.mp3, harp_note.mp3, narr_*, david_*, jesse_voice, saul_voice, goliath_challenge, sheep_baa, lion_soft, bear_soft, celebrate.mp3
+## Audio
+soft_harp_bg.mp3, birds_ambient.mp3, bird_tweet.mp3, all character voices, sheep_baa, etc.
 
-100% faithful to the Hebrew of 1 Samuel 17. Soft & joyful for little ones.
-
-Made with love ✨
+Made with love for your little girl ✨

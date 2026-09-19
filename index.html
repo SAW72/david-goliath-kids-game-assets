@@ -6,84 +6,90 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="David & Goliath">
-  <title>David & Goliath – The Battle is the LORD’s!</title>
+  <title>David & Goliath – Easy • Medium • Hard</title>
   <style>
-    :root {
-      --sky:#87CEEB; --cream:#FFF8E1; --orange:#FF9A3C; --red:#FF6B6B;
-      --green:#4CAF50; --darkgreen:#2E7D32; --brown:#5D4037; --blue:#1E88E5;
-    }
+    :root{--sky:#87CEEB;--cream:#FFF8E1;--orange:#FF9A3C;--red:#FF6B6B;--green:#4CAF50;--darkgreen:#2E7D32;--brown:#5D4037;--blue:#1E88E5}
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
     html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
       background:linear-gradient(180deg,var(--sky) 0%,#E0F7FA 45%,var(--cream) 100%);touch-action:manipulation;position:fixed;inset:0}
     #app{width:100%;height:100%;position:relative}
-
-    #title-screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;
-      background:linear-gradient(180deg,#87CEEB,#E0F7FA,#FFF8E1);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s}
-    #title-screen.hidden{opacity:0;transform:scale(1.05);pointer-events:none}
-    #title-screen img{width:min(94vw,920px);border-radius:28px;box-shadow:0 20px 50px rgba(0,0,0,.25);animation:float 4s ease-in-out infinite;margin-bottom:28px}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-    .big-btn{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:900;padding:24px 70px;border:none;border-radius:999px;cursor:pointer;color:#fff;
-      letter-spacing:.5px;box-shadow:0 10px 0 rgba(0,0,0,.2),0 18px 40px rgba(0,0,0,.25);transition:transform .12s,box-shadow .12s}
-    .big-btn:active{transform:translateY(8px);box-shadow:0 2px 0 rgba(0,0,0,.2),0 8px 20px rgba(0,0,0,.2)}
+    .screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+    .screen.active{display:flex}
+    #title-screen img{width:min(92vw,880px);border-radius:24px;box-shadow:0 16px 40px rgba(0,0,0,.22);margin-bottom:18px;animation:float 4s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    .big-btn{font-size:clamp(1.6rem,4.5vw,2.3rem);font-weight:900;padding:20px 48px;border:none;border-radius:999px;cursor:pointer;color:#fff;
+      box-shadow:0 8px 0 rgba(0,0,0,.18),0 14px 30px rgba(0,0,0,.22);transition:transform .12s,box-shadow .12s;margin:8px}
+    .big-btn:active{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.18),0 6px 15px rgba(0,0,0,.2)}
     .btn-play{background:linear-gradient(135deg,var(--orange),var(--red))}
     .btn-green{background:linear-gradient(135deg,var(--green),var(--darkgreen))}
     .btn-blue{background:linear-gradient(135deg,#42A5F5,var(--blue))}
-
-    #player-area{display:none;flex-direction:column;align-items:center;width:100%;height:100%;padding:env(safe-area-inset-top) 12px 12px;position:relative}
-    #player-area.active{display:flex}
-    #video-wrap{position:relative;width:100%;max-height:62vh;border-radius:24px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.3);background:#111}
-    video{width:100%;height:auto;max-height:62vh;display:block;object-fit:contain;background:#000}
-    #progress-bar{position:absolute;bottom:0;left:0;height:6px;background:linear-gradient(90deg,var(--orange),var(--green));width:0%;transition:width .3s linear}
-    #stars{display:flex;gap:10px;margin:10px 0 4px;font-size:1.8rem}
-    .star{opacity:.25;transition:all .4s;filter:grayscale(1)}.star.lit{opacity:1;filter:none;transform:scale(1.2)}
-    #scene-label{font-size:clamp(1.1rem,3.5vw,1.5rem);font-weight:800;color:var(--brown);text-shadow:0 1px 3px #fff;margin-bottom:4px}
-    #controls{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:8px}
-    #memory{position:absolute;bottom:90px;left:50%;transform:translateX(-50%) scale(.8);background:rgba(255,255,255,.95);padding:14px 32px;border-radius:50px;
-      font-size:clamp(1.2rem,4vw,1.6rem);font-weight:900;color:#1565C0;box-shadow:0 8px 25px rgba(0,0,0,.15);opacity:0;transition:all .5s;white-space:nowrap;pointer-events:none}
+    .btn-easy{background:linear-gradient(135deg,#66BB6A,#43A047);font-size:clamp(1.5rem,4vw,2rem)}
+    .btn-med{background:linear-gradient(135deg,#FFA726,#FB8C00);font-size:clamp(1.5rem,4vw,2rem)}
+    .btn-hard{background:linear-gradient(135deg,#EF5350,#E53935);font-size:clamp(1.5rem,4vw,2rem)}
+    #level-screen h1{font-size:clamp(1.8rem,5vw,2.6rem);color:var(--brown);margin-bottom:12px;text-shadow:0 1px 2px #fff}
+    #level-screen p{font-size:1.2rem;color:#5D4037;margin-bottom:24px;text-align:center;max-width:400px}
+    #level-btns{display:flex;flex-direction:column;gap:14px;align-items:center}
+    #player-area{padding:env(safe-area-inset-top) 10px 10px}
+    #video-wrap{position:relative;width:100%;max-height:58vh;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.28);background:#111}
+    video{width:100%;max-height:58vh;display:block;object-fit:contain;background:#000}
+    #progress-bar{position:absolute;bottom:0;left:0;height:5px;background:linear-gradient(90deg,var(--orange),var(--green));width:0%}
+    #stars{display:flex;gap:8px;margin:8px 0 4px;font-size:1.6rem}
+    .star{opacity:.25;transition:all .35s;filter:grayscale(1)}.star.lit{opacity:1;filter:none;transform:scale(1.15)}
+    #scene-label{font-size:clamp(1rem,3.2vw,1.35rem);font-weight:800;color:var(--brown);text-shadow:0 1px 2px #fff}
+    #controls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    #memory{position:absolute;bottom:80px;left:50%;transform:translateX(-50%) scale(.85);background:rgba(255,255,255,.95);padding:12px 28px;border-radius:40px;
+      font-size:clamp(1.1rem,3.5vw,1.45rem);font-weight:900;color:#1565C0;box-shadow:0 6px 20px rgba(0,0,0,.12);opacity:0;transition:all .45s;white-space:nowrap;pointer-events:none}
     #memory.show{opacity:1;transform:translateX(-50%) scale(1)}
-
-    #mini{display:none;position:absolute;inset:0;z-index:50;background:rgba(255,248,225,.97);flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+    #mini{position:absolute;inset:0;z-index:50;background:rgba(255,248,225,.97);flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;display:none}
     #mini.active{display:flex}
-    #mini h2{font-size:clamp(1.8rem,5vw,2.4rem);color:var(--brown);margin-bottom:20px}
-    #mini-grid{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;max-width:700px;margin-bottom:30px}
-    .tap-item{width:140px;height:140px;border-radius:50%;background:#fff;box-shadow:0 10px 25px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;
-      font-size:4rem;cursor:pointer;transition:transform .15s;border:6px solid #FFE0B2}
-    .tap-item img{width:90%;height:90%;object-fit:contain;border-radius:50%}
-    .tap-item:active{transform:scale(.9)}.tap-item.done{background:#C8E6C9;border-color:var(--green);transform:scale(1.05)}
-    #mini-next{display:none;margin-top:10px}#mini-next.show{display:block}
-
-    #end-screen{display:none;position:absolute;inset:0;z-index:80;flex-direction:column;align-items:center;justify-content:center;
-      background:linear-gradient(180deg,#FFF8E1,#E8F5E9 60%,#C8E6C9);text-align:center;padding:20px;overflow:hidden}
-    #end-screen.active{display:flex}
-    #end-screen h1{font-size:clamp(2.5rem,8vw,4rem);color:var(--darkgreen);margin-bottom:12px;animation:bounce 1s infinite alternate}
-    @keyframes bounce{from{transform:scale(1)}to{transform:scale(1.08)}}
-    #end-screen p{font-size:clamp(1.3rem,4vw,1.8rem);color:var(--brown);margin-bottom:30px;max-width:520px;line-height:1.4}
+    #mini h2{font-size:clamp(1.6rem,4.5vw,2.2rem);color:var(--brown);margin-bottom:16px}
+    #mini-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;max-width:720px;margin-bottom:24px}
+    .tap-item{width:120px;height:120px;border-radius:50%;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;
+      font-size:3.5rem;cursor:pointer;transition:transform .12s;border:5px solid #FFE0B2}
+    .tap-item img{width:88%;height:88%;object-fit:contain;border-radius:50%}
+    .tap-item:active{transform:scale(.88)}.tap-item.done{background:#C8E6C9;border-color:var(--green);transform:scale(1.04)}
+    #mini-next{display:none;margin-top:8px}#mini-next.show{display:block}
+    #end-screen{background:linear-gradient(180deg,#FFF8E1,#E8F5E9 55%,#C8E6C9);text-align:center;padding:20px;overflow:hidden}
+    #end-screen h1{font-size:clamp(2.3rem,7vw,3.6rem);color:var(--darkgreen);margin-bottom:10px;animation:bounce 1s infinite alternate}
+    @keyframes bounce{from{transform:scale(1)}to{transform:scale(1.07)}}
+    #end-screen p{font-size:clamp(1.2rem,3.8vw,1.6rem);color:var(--brown);margin-bottom:24px;max-width:480px;line-height:1.35}
     #confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-    .c-piece{position:absolute;width:12px;height:12px;top:-20px;border-radius:2px;animation:fall linear forwards}
-    @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.3}}
-
-    #top-bar{position:absolute;top:12px;right:12px;z-index:200;display:flex;align-items:center;gap:10px}
-    #mute-btn{width:52px;height:52px;border-radius:50%;border:none;background:rgba(255,255,255,.9);font-size:1.6rem;box-shadow:0 4px 12px rgba(0,0,0,.15);cursor:pointer}
-    #vol-wrap{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.9);padding:6px 12px;border-radius:30px;box-shadow:0 4px 12px rgba(0,0,0,.12)}
-    #vol-wrap input{width:80px;accent-color:var(--orange)}
+    .c-piece{position:absolute;width:11px;height:11px;top:-20px;border-radius:2px;animation:fall linear forwards}
+    @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.25}}
+    #top-bar{position:absolute;top:10px;right:10px;z-index:200;display:flex;align-items:center;gap:8px}
+    #mute-btn{width:48px;height:48px;border-radius:50%;border:none;background:rgba(255,255,255,.92);font-size:1.5rem;box-shadow:0 3px 10px rgba(0,0,0,.12);cursor:pointer}
+    #vol-wrap{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.92);padding:5px 10px;border-radius:24px;box-shadow:0 3px 10px rgba(0,0,0,.1)}
+    #vol-wrap input{width:70px;accent-color:var(--orange)}
+    #level-badge{position:absolute;top:10px;left:10px;z-index:200;background:rgba(255,255,255,.9);padding:6px 14px;border-radius:20px;font-weight:800;font-size:1rem;color:var(--brown);box-shadow:0 3px 10px rgba(0,0,0,.1)}
   </style>
 </head>
 <body>
   <div id="app">
     <div id="top-bar">
-      <div id="vol-wrap">
-        <span style="font-size:1.2rem">🔊</span>
-        <input type="range" id="vol-slider" min="0" max="100" value="70">
-      </div>
-      <button id="mute-btn" title="Mute">🔊</button>
+      <div id="vol-wrap"><span>🔊</span><input type="range" id="vol-slider" min="0" max="100" value="70"></div>
+      <button id="mute-btn">🔊</button>
     </div>
+    <div id="level-badge" style="display:none">Easy ⭐</div>
 
-    <div id="title-screen">
+    <!-- TITLE -->
+    <div id="title-screen" class="screen active">
       <img src="assets/title.jpg" alt="David & Goliath">
       <button class="big-btn btn-play" id="start-btn">▶ Play Story</button>
     </div>
 
-    <div id="player-area">
+    <!-- LEVEL SELECT -->
+    <div id="level-screen" class="screen">
+      <h1>Choose Your Level 💛</h1>
+      <p>For a brave little girl who loves God!</p>
+      <div id="level-btns">
+        <button class="big-btn btn-easy" data-level="easy">⭐ Easy<br><small style="font-size:0.7em">Gentle & slow</small></button>
+        <button class="big-btn btn-med" data-level="medium">⭐⭐ Medium<br><small style="font-size:0.7em">Just right</small></button>
+        <button class="big-btn btn-hard" data-level="hard">⭐⭐⭐ Hard<br><small style="font-size:0.7em">More fun taps!</small></button>
+      </div>
+    </div>
+
+    <!-- PLAYER -->
+    <div id="player-area" class="screen">
       <div id="scene-label">Scene 1 of 7</div>
       <div id="stars"></div>
       <div id="video-wrap">
@@ -97,46 +103,51 @@
       <div id="memory">✨ The battle is the LORD’s! ✨</div>
     </div>
 
+    <!-- MINI -->
     <div id="mini">
       <h2 id="mini-title">Tap the happy sheep!</h2>
       <div id="mini-grid"></div>
       <button class="big-btn btn-green" id="mini-next">Yay! Next ▶</button>
     </div>
 
-    <div id="end-screen">
+    <!-- END -->
+    <div id="end-screen" class="screen">
       <div id="confetti"></div>
       <h1>Yay! 🎉</h1>
-      <p>David trusted God<br>and the giant fell!<br><strong>The battle is the LORD’s!</strong></p>
+      <p>David trusted God and won!<br><strong>The battle is the LORD’s!</strong></p>
       <button class="big-btn btn-green" id="restart-btn">Play Again ❤️</button>
+      <button class="big-btn btn-blue" id="change-level-btn" style="margin-top:12px;font-size:1.3rem">Change Level</button>
     </div>
   </div>
 
   <audio id="bg-music" loop preload="auto" src="assets/audio/soft_harp_bg.mp3"></audio>
+  <audio id="birds" loop preload="auto" src="assets/audio/birds_ambient.mp3"></audio>
   <audio id="harp-note" preload="auto" src="assets/audio/harp_note.mp3"></audio>
   <audio id="narr" preload="auto"></audio>
   <audio id="char-voice" preload="auto"></audio>
   <audio id="sfx" preload="auto"></audio>
   <audio id="celebrate" preload="auto" src="assets/audio/celebrate.mp3"></audio>
+  <audio id="tweet" preload="auto" src="assets/audio/bird_tweet.mp3"></audio>
 
   <script>
     const scenes = [
-      { file:"videos/08-jesse-sends-david.mp4", label:"Jesse sends David",
-        narr:"assets/audio/narr_jesse.mp3", char:"assets/audio/jesse_voice.mp3", sfx:null, mini:null },
-      { file:"videos/03-david-with-sheep.mp4", label:"David & the Sheep",
-        narr:"assets/audio/narr_sheep.mp3", char:null, sfx:"assets/audio/sheep_baa.mp3", mini:"sheep" },
-      { file:"videos/05-david-fights-lion.mp4", label:"David & the Lion",
-        narr:"assets/audio/narr_lion.mp3", char:null, sfx:"assets/audio/lion_soft.mp3", mini:null },
-      { file:"videos/06-david-fights-bear.mp4", label:"David & the Bear",
-        narr:"assets/audio/narr_bear.mp3", char:null, sfx:"assets/audio/bear_soft.mp3", mini:null },
-      { file:"videos/07-david-tells-saul-lion-bear.mp4", label:"David tells Saul",
-        narr:null, char:"assets/audio/david_saul.mp3", sfx:"assets/audio/saul_voice.mp3", mini:"brave" },
-      { file:"videos/02-goliath-philistine-champion.mp4", label:"Goliath challenges",
-        narr:"assets/audio/narr_goliath.mp3", char:"assets/audio/goliath_challenge.mp3", sfx:null, mini:"stone" },
-      { file:"videos/04-david-vs-goliath-victory.mp4", label:"Victory!",
-        narr:null, char:"assets/audio/david_victory.mp3", sfx:null, mini:null }
+      {file:"videos/08-jesse-sends-david.mp4",label:"Jesse sends David",narr:"assets/audio/narr_jesse.mp3",char:"assets/audio/jesse_voice.mp3",sfx:null,mini:null},
+      {file:"videos/03-david-with-sheep.mp4",label:"David & the Sheep",narr:"assets/audio/narr_sheep.mp3",char:null,sfx:"assets/audio/sheep_baa.mp3",mini:"sheep"},
+      {file:"videos/05-david-fights-lion.mp4",label:"David & the Lion",narr:"assets/audio/narr_lion.mp3",char:null,sfx:"assets/audio/lion_soft.mp3",mini:null},
+      {file:"videos/06-david-fights-bear.mp4",label:"David & the Bear",narr:"assets/audio/narr_bear.mp3",char:null,sfx:"assets/audio/bear_soft.mp3",mini:null},
+      {file:"videos/07-david-tells-saul-lion-bear.mp4",label:"David tells Saul",narr:null,char:"assets/audio/david_saul.mp3",sfx:"assets/audio/saul_voice.mp3",mini:"brave"},
+      {file:"videos/02-goliath-philistine-champion.mp4",label:"Goliath challenges",narr:"assets/audio/narr_goliath.mp3",char:"assets/audio/goliath_challenge.mp3",sfx:null,mini:"stone"},
+      {file:"videos/04-david-vs-goliath-victory.mp4",label:"Victory!",narr:null,char:"assets/audio/david_victory.mp3",sfx:null,mini:null}
     ];
 
-    let current=0, muted=false, masterVol=0.7;
+    // Level configs – still gentle for 3yo even on hard
+    const levels = {
+      easy:   { sheep:2, brave:2, stone:3, name:"Easy ⭐", delay:900, confetti:60 },
+      medium: { sheep:4, brave:3, stone:5, name:"Medium ⭐⭐", delay:600, confetti:90 },
+      hard:   { sheep:6, brave:4, stone:7, name:"Hard ⭐⭐⭐", delay:400, confetti:120 }
+    };
+
+    let current=0, level="medium", muted=false, masterVol=0.7;
     const video=document.getElementById("video");
     const progressBar=document.getElementById("progress-bar");
     const sceneLabel=document.getElementById("scene-label");
@@ -147,44 +158,50 @@
     const miniTitle=document.getElementById("mini-title");
     const miniNext=document.getElementById("mini-next");
     const bgMusic=document.getElementById("bg-music");
+    const birds=document.getElementById("birds");
     const harpNote=document.getElementById("harp-note");
     const narr=document.getElementById("narr");
     const charVoice=document.getElementById("char-voice");
     const sfx=document.getElementById("sfx");
     const celebrate=document.getElementById("celebrate");
+    const tweet=document.getElementById("tweet");
     const volSlider=document.getElementById("vol-slider");
+    const levelBadge=document.getElementById("level-badge");
 
     scenes.forEach((_,i)=>{const s=document.createElement("span");s.className="star";s.textContent="⭐";s.id="star-"+i;starsEl.appendChild(s)});
 
     function setVolume(v){
       masterVol=v;
-      bgMusic.volume = v*0.32;
-      narr.volume = v*0.95;
-      charVoice.volume = v*0.95;
-      sfx.volume = v*0.85;
-      harpNote.volume = v*0.7;
-      celebrate.volume = v*0.9;
+      bgMusic.volume=v*0.28; birds.volume=v*0.22;
+      narr.volume=v*0.95; charVoice.volume=v*0.95; sfx.volume=v*0.85;
+      harpNote.volume=v*0.65; celebrate.volume=v*0.9; tweet.volume=v*0.5;
     }
     setVolume(0.7);
-    volSlider.oninput = e => setVolume(e.target.value/100);
+    volSlider.oninput=e=>setVolume(e.target.value/100);
 
-    function lightStars(n){for(let i=0;i<scenes.length;i++) document.getElementById("star-"+i).classList.toggle("lit",i<=n)}
+    function showScreen(id){
+      document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    function lightStars(n){for(let i=0;i<scenes.length;i++)document.getElementById("star-"+i).classList.toggle("lit",i<=n)}
 
     function play(el,src){if(muted||!src)return;el.src=src;el.play().catch(()=>{})}
-    function stopAllVoices(){narr.pause();charVoice.pause();sfx.pause()}
+    function stopVoices(){narr.pause();charVoice.pause();sfx.pause()}
 
     function showScene(idx){
-      if(idx>=scenes.length){document.getElementById("player-area").classList.remove("active");showEnd();return}
+      if(idx>=scenes.length){showScreen("end-screen");showEnd();return}
       current=idx;const sc=scenes[current];
-      stopAllVoices();
+      stopVoices();
       video.src=sc.file;sceneLabel.textContent=`Scene ${current+1} of ${scenes.length} • ${sc.label}`;
       lightStars(current);memory.classList.toggle("show",current===scenes.length-1);
       progressBar.style.width="0%";video.load();video.play().catch(()=>{});
-
-      // Staggered voice timing for better polish
-      setTimeout(()=>{if(sc.narr)play(narr,sc.narr)},600);
-      setTimeout(()=>{if(sc.char)play(charVoice,sc.char)},2200);
-      setTimeout(()=>{if(sc.sfx)play(sfx,sc.sfx)},3800);
+      const d=levels[level].delay;
+      setTimeout(()=>{if(sc.narr)play(narr,sc.narr)},d);
+      setTimeout(()=>{if(sc.char)play(charVoice,sc.char)},d+1600);
+      setTimeout(()=>{if(sc.sfx)play(sfx,sc.sfx)},d+3200);
+      // random bird tweet
+      if(!muted && Math.random()>0.4) setTimeout(()=>{tweet.currentTime=0;tweet.play().catch(()=>{})},d+500);
     }
 
     video.addEventListener("timeupdate",()=>{if(video.duration)progressBar.style.width=(video.currentTime/video.duration*100)+"%"});
@@ -192,7 +209,12 @@
 
     function startMini(type){
       mini.classList.add("active");miniNext.classList.remove("show");miniGrid.innerHTML="";
+      const cfg=levels[level];
       let needed=0,done=0;
+      if(type==="sheep"){needed=cfg.sheep;miniTitle.textContent=`Tap the happy sheep! (${needed}) 🐑`}
+      else if(type==="brave"){needed=cfg.brave;miniTitle.textContent=`Tap David to be brave! (${needed}) 💪`}
+      else if(type==="stone"){needed=cfg.stone;miniTitle.textContent=`Pick smooth stones! (${needed}) 🪨`}
+
       function item(content,isImg=false){
         const d=document.createElement("div");d.className="tap-item";
         if(isImg)d.innerHTML=content;else d.textContent=content;
@@ -202,40 +224,59 @@
           done++;if(done>=needed)miniNext.classList.add("show")}};
         miniGrid.appendChild(d);
       }
-      if(type==="sheep"){miniTitle.textContent="Tap the happy sheep! 🐑";needed=4;for(let i=0;i<4;i++)item(`<img src="assets/sheep-icon.jpg">`,true)}
-      else if(type==="brave"){miniTitle.textContent="Tap David to be brave! 💪";needed=3;for(let i=0;i<3;i++)item("🦸")}
-      else if(type==="stone"){miniTitle.textContent="Pick 5 smooth stones! 🪨";needed=5;for(let i=0;i<5;i++)item(`<img src="assets/sling-icon.jpg">`,true)}
+      for(let i=0;i<needed;i++){
+        if(type==="sheep")item(`<img src="assets/sheep-icon.jpg">`,true);
+        else if(type==="brave")item("🦸");
+        else item(`<img src="assets/sling-icon.jpg">`,true);
+      }
     }
     miniNext.onclick=()=>{mini.classList.remove("active");showScene(current+1)};
 
+    // Title → Level select
     document.getElementById("start-btn").onclick=()=>{
-      document.getElementById("title-screen").classList.add("hidden");
-      if(!muted){bgMusic.currentTime=0;bgMusic.play().catch(()=>{})}
-      setTimeout(()=>{document.getElementById("title-screen").style.display="none";
-        document.getElementById("player-area").classList.add("active");showScene(0)},600);
+      showScreen("level-screen");
+      if(!muted){bgMusic.play().catch(()=>{});birds.play().catch(()=>{})}
     };
-    document.getElementById("next-btn").onclick=()=>{const sc=scenes[current];
-      if(sc.mini&&!mini.classList.contains("active"))startMini(sc.mini);else showScene(current+1)};
+
+    // Level chosen
+    document.querySelectorAll("[data-level]").forEach(btn=>{
+      btn.onclick=()=>{
+        level=btn.dataset.level;
+        levelBadge.style.display="block";
+        levelBadge.textContent=levels[level].name;
+        showScreen("player-area");
+        showScene(0);
+      };
+    });
+
+    document.getElementById("next-btn").onclick=()=>{
+      const sc=scenes[current];
+      if(sc.mini&&!mini.classList.contains("active"))startMini(sc.mini);
+      else showScene(current+1);
+    };
     document.getElementById("replay-btn").onclick=()=>{video.currentTime=0;video.play();
-      const sc=scenes[current];setTimeout(()=>{if(sc.narr)play(narr,sc.narr);if(sc.char)play(charVoice,sc.char)},400)};
-    document.getElementById("restart-btn").onclick=()=>{document.getElementById("end-screen").classList.remove("active");
-      document.getElementById("player-area").classList.add("active");
-      if(!muted){bgMusic.currentTime=0;bgMusic.play().catch(()=>{})}showScene(0)};
+      const sc=scenes[current];setTimeout(()=>{if(sc.narr)play(narr,sc.narr);if(sc.char)play(charVoice,sc.char)},300)};
+    document.getElementById("restart-btn").onclick=()=>{
+      showScreen("player-area");
+      if(!muted){bgMusic.currentTime=0;bgMusic.play().catch(()=>{});birds.play().catch(()=>{})}
+      showScene(0);
+    };
+    document.getElementById("change-level-btn").onclick=()=>showScreen("level-screen");
 
     document.getElementById("mute-btn").onclick=()=>{
       muted=!muted;document.getElementById("mute-btn").textContent=muted?"🔇":"🔊";
-      [bgMusic,narr,charVoice,sfx,harpNote,celebrate].forEach(a=>a.muted=muted);
-      if(!muted&&document.getElementById("player-area").classList.contains("active"))bgMusic.play().catch(()=>{});
+      [bgMusic,birds,narr,charVoice,sfx,harpNote,celebrate,tweet].forEach(a=>a.muted=muted);
+      if(!muted){bgMusic.play().catch(()=>{});birds.play().catch(()=>{})}
     };
 
     function showEnd(){
-      document.getElementById("end-screen").classList.add("active");
-      if(!muted){celebrate.play().catch(()=>{});bgMusic.volume=masterVol*0.4}
+      if(!muted){celebrate.play().catch(()=>{});bgMusic.volume=masterVol*0.35}
       const conf=document.getElementById("confetti");conf.innerHTML="";
       const colors=["#FF6B6B","#FF9A3C","#4CAF50","#42A5F5","#AB47BC","#FFEE58"];
-      for(let i=0;i<100;i++){const p=document.createElement("div");p.className="c-piece";
+      const n=levels[level].confetti;
+      for(let i=0;i<n;i++){const p=document.createElement("div");p.className="c-piece";
         p.style.left=Math.random()*100+"%";p.style.background=colors[Math.floor(Math.random()*colors.length)];
-        p.style.animationDuration=(2.5+Math.random()*3)+"s";p.style.animationDelay=Math.random()*1.5+"s";conf.appendChild(p)}
+        p.style.animationDuration=(2.2+Math.random()*3)+"s";p.style.animationDelay=Math.random()*1.5+"s";conf.appendChild(p)}
     }
 
     document.addEventListener("gesturestart",e=>e.preventDefault());
