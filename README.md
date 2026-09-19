@@ -1,80 +1,49 @@
-# David & Goliath Kids Game Assets  
-### For a 3-year-old girl’s iPad web app 💛
+# David & Goliath – Toddler Web Game 💛
+### For a 3-year-old girl’s iPad (fully polished)
 
-Bright, soft, **scripture-faithful** cartoon character videos for a simple touch-friendly web game.  
-Everything stays completely true to the **Hebrew text of 1 Samuel 17**.  
-No scary violence, no blood — just courage, faith in YHWH, cute animals, and happy endings perfect for a toddler.
+A complete, beautiful, scripture-faithful interactive story game made specially for little hands.
 
-## Story Order (start from the beginning)
+**Live demo / Play now**  
+Open `index.html` on any iPad / modern browser (or enable GitHub Pages).
 
-1. **Jesse sends David** (video 08)  
-2. **David the shepherd** + sheep (videos 01 + 03)  
-3. **David fights the lion** (video 05) — 1 Sam 17:34-35  
-4. **David fights the bear** (video 06) — 1 Sam 17:34-37  
-5. **David tells King Saul** about the lion & bear (video 07)  
-6. **Goliath challenges** (video 02)  
-7. **David vs Goliath victory** (video 04)  
+## ✨ What you get
+- Gorgeous animated title screen
+- Full story in perfect order starting from the **lion & bear** (1 Samuel 17:34-37)
+- Soft, non-scary cartoon videos of every character
+- Three fun mini-games between scenes:
+  - Tap the happy sheep 🐑
+  - Tap David to be brave 💪
+  - Pick five smooth stones 🪨
+- Progress stars
+- Smooth video progress bar
+- Confetti celebration on victory
+- Huge colorful buttons perfect for 3-year-olds
+- “The battle is the LORD’s!” memory line
+- Fully offline once loaded
 
-## All Videos
+## Story Order
+1. Jesse sends David  
+2. David with his sheep (+ sheep tap mini-game)  
+3. David & the Lion  
+4. David & the Bear  
+5. David tells King Saul (+ brave tap)  
+6. Goliath challenges (+ pick 5 stones)  
+7. Victory! Confetti & celebration
 
-| File | Character / Scene | Scripture |
-|------|-------------------|-----------|
-| [videos/01-david-shepherd-boy.mp4](videos/01-david-shepherd-boy.mp4) | Dawid (דָּוִד) the young shepherd | 1 Sam 17 |
-| [videos/02-goliath-philistine-champion.mp4](videos/02-goliath-philistine-champion.mp4) | Golyath (גָּלְיָת) of Gath | 1 Sam 17:4-10 |
-| [videos/03-david-with-sheep.mp4](videos/03-david-with-sheep.mp4) | David with his flock | 1 Sam 17:15,34 |
-| [videos/04-david-vs-goliath-victory.mp4](videos/04-david-vs-goliath-victory.mp4) | The battle is the LORD’s! | 1 Sam 17:45-50 |
-| [videos/05-david-fights-lion.mp4](videos/05-david-fights-lion.mp4) | David rescues lamb from lion | 1 Sam 17:34-35 |
-| [videos/06-david-fights-bear.mp4](videos/06-david-fights-bear.mp4) | David rescues lamb from bear | 1 Sam 17:34-37 |
-| [videos/07-david-tells-saul-lion-bear.mp4](videos/07-david-tells-saul-lion-bear.mp4) | David tells Saul “The LORD who delivered me…” | 1 Sam 17:34-37 |
-| [videos/08-jesse-sends-david.mp4](videos/08-jesse-sends-david.mp4) | Kind father Jesse (Yishai) sends food | 1 Sam 17:17-18 |
+## Files
+- `index.html` – the complete game (single file + assets)
+- `assets/title.jpg` – title art
+- `assets/sheep-icon.jpg` & `sling-icon.jpg` – mini-game icons
+- `videos/` – all 8 character videos
 
-## Character Consistency Notes
-- Main David design locked: curly dark brown hair, freckles, big kind eyes, brown tunic + rope belt, wooden staff.
-- Soft preschool 3D/2.5D cartoon style, big heads, gentle expressions.
-- Lion and bear are cute and non-scary (they run away gently).
-- King Saul is tall, bearded, friendly king with simple crown and purple/blue robe.
-- Jesse is a loving gray-bearded dad.
+## How to play with your daughter
+1. Open the folder on iPad Safari (or host it)
+2. Add to Home Screen for app-like feel
+3. Let her tap the big buttons – she will love the sheep and stones!
 
-## For the Web App (iPad / 3-year-old)
-- Big touch buttons, simple one-tap interactions.
-- Play videos in story order.
-- Short levels: “Tap the sheep”, “Help David stand brave”, “Choose the stone”, “Celebrate!”
-- Memory phrase in big letters: “The battle is the LORD’s!” (1 Sam 17:47)
-- Soft background music + happy animal sounds.
-- No text-heavy screens; lots of pictures and spoken lines.
+## Scripture fidelity
+Every video and line is kept true to the original Hebrew of 1 Samuel 17.  
+No gore, no fear – only courage, faith, and joy.
 
-## How to feed to Grok Bot agents
-Download the MP4s and tell the bots:  
-“Use ONLY these exact character videos. Keep every detail faithful to the Hebrew of 1 Samuel 17. Target: my 3-year-old daughter on iPad. Super simple web app, big buttons, start with lion and bear story.”
-
-## License
-MIT — free to use for your family game and kids ministry.
-
-Created with love for a brave little girl who loves Jesus and her iPad ✨  
+Made with love for a brave little girl ✨  
 September 2026
-
----
-
-## 🎮 Ready-to-Play Web App (for iPad)
-
-Open **index.html** on any modern browser / iPad Safari.
-
-### How to play with your 3-year-old
-1. Open the page full-screen on the iPad.
-2. Big orange **▶ Play Story** button.
-3. Videos play in gentle order starting from Jesse → sheep → lion → bear → Saul → Goliath → victory.
-4. Big green **Next ▶** button after each scene.
-5. Happy end screen with “Play Again”.
-
-### Features for toddlers
-- Huge colorful buttons
-- No keyboard / no complicated menus
-- Soft colors & happy ending
-- Memory verse shown on victory: “The battle is the LORD’s!”
-- Fully offline once loaded (videos are local)
-
-### Live Demo (GitHub Pages)
-After enabling Pages on this repo, visit:  
-https://SAW72.github.io/david-goliath-kids-game-assets/
-
----

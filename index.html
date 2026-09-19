@@ -2,183 +2,394 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="David & Goliath">
   <title>David & Goliath – The Battle is the LORD’s!</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --sky: #87CEEB;
+      --cream: #FFF8E1;
+      --orange: #FF9A3C;
+      --red: #FF6B6B;
+      --green: #4CAF50;
+      --darkgreen: #2E7D32;
+      --brown: #5D4037;
+      --blue: #1E88E5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
     html, body {
       width: 100%; height: 100%; overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(180deg, #87CEEB 0%, #E0F7FA 40%, #FFF8E1 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background: linear-gradient(180deg, var(--sky) 0%, #E0F7FA 45%, var(--cream) 100%);
       touch-action: manipulation;
+      position: fixed; inset: 0;
     }
-    #app {
-      width: 100%; height: 100%; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; position: relative;
-    }
+    #app { width: 100%; height: 100%; position: relative; }
 
-    /* Title Screen */
+    /* ===== TITLE SCREEN ===== */
     #title-screen {
       position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; z-index: 10;
+      align-items: center; justify-content: center; z-index: 100;
       background: linear-gradient(180deg, #87CEEB, #E0F7FA, #FFF8E1);
-      transition: opacity 0.6s ease;
+      transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s;
     }
-    #title-screen.hidden { opacity: 0; pointer-events: none; }
+    #title-screen.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
     #title-screen img {
-      width: 92%; max-width: 900px; border-radius: 24px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-      margin-bottom: 24px;
+      width: min(94vw, 920px); border-radius: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      animation: float 4s ease-in-out infinite;
+      margin-bottom: 28px;
     }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
     .big-btn {
-      font-size: 2.2rem; font-weight: 800; padding: 22px 60px;
-      border: none; border-radius: 999px; cursor: pointer;
-      background: linear-gradient(135deg, #FF9A3C, #FF6B6B);
-      color: white; box-shadow: 0 8px 0 #E05555, 0 12px 30px rgba(0,0,0,0.25);
-      transition: transform 0.15s, box-shadow 0.15s;
-      -webkit-user-select: none; user-select: none;
+      font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 900;
+      padding: 24px 70px; border: none; border-radius: 999px; cursor: pointer;
+      color: white; letter-spacing: 0.5px;
+      box-shadow: 0 10px 0 rgba(0,0,0,0.2), 0 18px 40px rgba(0,0,0,0.25);
+      transition: transform 0.12s, box-shadow 0.12s;
+      -webkit-user-select: none;
     }
-    .big-btn:active { transform: translateY(6px); box-shadow: 0 2px 0 #E05555, 0 6px 15px rgba(0,0,0,0.2); }
-    .big-btn.green { background: linear-gradient(135deg, #4CAF50, #2E7D32); box-shadow: 0 8px 0 #1B5E20, 0 12px 30px rgba(0,0,0,0.25); }
-    .big-btn.green:active { box-shadow: 0 2px 0 #1B5E20, 0 6px 15px rgba(0,0,0,0.2); }
+    .big-btn:active { transform: translateY(8px); box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.2); }
+    .btn-play { background: linear-gradient(135deg, var(--orange), var(--red)); }
+    .btn-green { background: linear-gradient(135deg, var(--green), var(--darkgreen)); }
+    .btn-blue { background: linear-gradient(135deg, #42A5F5, var(--blue)); }
 
-    /* Video Player Area */
+    /* ===== PLAYER ===== */
     #player-area {
       display: none; flex-direction: column; align-items: center;
-      width: 100%; height: 100%; padding: 12px; position: relative;
+      width: 100%; height: 100%; padding: env(safe-area-inset-top) 12px 12px;
+      position: relative;
     }
     #player-area.active { display: flex; }
-    video {
-      width: 100%; max-height: 72vh; border-radius: 20px;
-      background: #000; box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-      object-fit: contain;
+    #video-wrap {
+      position: relative; width: 100%; max-height: 68vh;
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+      background: #111;
     }
-    #progress {
-      margin-top: 12px; font-size: 1.4rem; font-weight: 700;
-      color: #5D4037; text-shadow: 0 1px 2px white;
+    video {
+      width: 100%; height: auto; max-height: 68vh; display: block;
+      object-fit: contain; background: #000;
+    }
+    #progress-bar {
+      position: absolute; bottom: 0; left: 0; height: 6px;
+      background: linear-gradient(90deg, var(--orange), var(--green));
+      width: 0%; transition: width 0.3s linear; border-radius: 0 3px 0 0;
+    }
+    #stars {
+      display: flex; gap: 10px; margin: 14px 0 6px; font-size: 1.8rem;
+    }
+    .star { opacity: 0.25; transition: all 0.4s; filter: grayscale(1); }
+    .star.lit { opacity: 1; filter: none; transform: scale(1.2); }
+    #scene-label {
+      font-size: clamp(1.1rem, 3.5vw, 1.5rem); font-weight: 800;
+      color: var(--brown); text-shadow: 0 1px 3px white; margin-bottom: 8px;
     }
     #controls {
-      margin-top: 16px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+      display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; margin-top: 8px;
     }
     #memory {
-      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: rgba(255,255,255,0.9); padding: 10px 24px; border-radius: 50px;
-      font-size: 1.3rem; font-weight: 800; color: #1565C0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: none;
+      position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%) scale(0.8);
+      background: rgba(255,255,255,0.95); padding: 14px 32px; border-radius: 50px;
+      font-size: clamp(1.2rem, 4vw, 1.6rem); font-weight: 900; color: #1565C0;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15); opacity: 0; transition: all 0.5s;
+      white-space: nowrap; pointer-events: none;
     }
-    #memory.show { display: block; }
+    #memory.show { opacity: 1; transform: translateX(-50%) scale(1); }
 
-    /* End Screen */
+    /* ===== INTERACTIVE MINI-GAMES ===== */
+    #mini {
+      display: none; position: absolute; inset: 0; z-index: 50;
+      background: rgba(255,248,225,0.97); flex-direction: column;
+      align-items: center; justify-content: center; padding: 20px;
+      text-align: center;
+    }
+    #mini.active { display: flex; }
+    #mini h2 {
+      font-size: clamp(1.8rem, 5vw, 2.4rem); color: var(--brown);
+      margin-bottom: 20px; text-shadow: 0 2px 0 white;
+    }
+    #mini-grid {
+      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+      max-width: 700px; margin-bottom: 30px;
+    }
+    .tap-item {
+      width: 140px; height: 140px; border-radius: 50%;
+      background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem; cursor: pointer; transition: transform 0.15s;
+      border: 6px solid #FFE0B2;
+    }
+    .tap-item img { width: 90%; height: 90%; object-fit: contain; border-radius: 50%; }
+    .tap-item:active { transform: scale(0.9); }
+    .tap-item.done { background: #C8E6C9; border-color: var(--green); transform: scale(1.05); }
+    #mini-next {
+      display: none; margin-top: 10px;
+    }
+    #mini-next.show { display: block; }
+
+    /* ===== END SCREEN ===== */
     #end-screen {
-      display: none; position: absolute; inset: 0; flex-direction: column;
-      align-items: center; justify-content: center; background: linear-gradient(180deg, #FFF8E1, #E8F5E9);
-      z-index: 20; text-align: center; padding: 20px;
+      display: none; position: absolute; inset: 0; z-index: 80;
+      flex-direction: column; align-items: center; justify-content: center;
+      background: linear-gradient(180deg, #FFF8E1, #E8F5E9 60%, #C8E6C9);
+      text-align: center; padding: 20px; overflow: hidden;
     }
     #end-screen.active { display: flex; }
-    #end-screen h1 { font-size: 2.8rem; color: #2E7D32; margin-bottom: 12px; }
-    #end-screen p { font-size: 1.6rem; color: #5D4037; margin-bottom: 30px; max-width: 600px; }
+    #end-screen h1 {
+      font-size: clamp(2.5rem, 8vw, 4rem); color: var(--darkgreen);
+      margin-bottom: 12px; animation: bounce 1s infinite alternate;
+    }
+    @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.08)} }
+    #end-screen p {
+      font-size: clamp(1.3rem, 4vw, 1.8rem); color: var(--brown);
+      margin-bottom: 30px; max-width: 520px; line-height: 1.4;
+    }
+    #confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+
+    /* Confetti pieces */
+    .c-piece {
+      position: absolute; width: 12px; height: 12px; top: -20px;
+      border-radius: 2px; animation: fall linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(720deg); opacity: 0.3; }
+    }
   </style>
 </head>
 <body>
   <div id="app">
-    <!-- Title Screen -->
+    <!-- TITLE -->
     <div id="title-screen">
       <img src="assets/title.jpg" alt="David & Goliath – The Battle is the LORD’s!">
-      <button class="big-btn" id="start-btn">▶ Play Story</button>
+      <button class="big-btn btn-play" id="start-btn">▶ Play Story</button>
     </div>
 
-    <!-- Video Player -->
+    <!-- VIDEO PLAYER -->
     <div id="player-area">
-      <video id="video" playsinline webkit-playsinline controlsList="nodownload nofullscreen noremoteplayback"></video>
-      <div id="progress">Scene 1 of 7</div>
-      <div id="controls">
-        <button class="big-btn green" id="next-btn">Next ▶</button>
-        <button class="big-btn" id="replay-btn" style="background:linear-gradient(135deg,#42A5F5,#1E88E5);box-shadow:0 8px 0 #1565C0,0 12px 30px rgba(0,0,0,0.25);">🔄 Again</button>
+      <div id="scene-label">Scene 1 of 7</div>
+      <div id="stars"></div>
+      <div id="video-wrap">
+        <video id="video" playsinline webkit-playsinline></video>
+        <div id="progress-bar"></div>
       </div>
-      <div id="memory">The battle is the LORD’s! ✨</div>
+      <div id="controls">
+        <button class="big-btn btn-green" id="next-btn">Next ▶</button>
+        <button class="big-btn btn-blue" id="replay-btn">🔄 Again</button>
+      </div>
+      <div id="memory">✨ The battle is the LORD’s! ✨</div>
     </div>
 
-    <!-- End Screen -->
+    <!-- MINI GAME OVERLAY -->
+    <div id="mini">
+      <h2 id="mini-title">Tap the happy sheep!</h2>
+      <div id="mini-grid"></div>
+      <button class="big-btn btn-green" id="mini-next">Yay! Next ▶</button>
+    </div>
+
+    <!-- END -->
     <div id="end-screen">
+      <div id="confetti"></div>
       <h1>Yay! 🎉</h1>
-      <p>David trusted God and won!<br>The battle is the LORD’s!</p>
-      <button class="big-btn green" id="restart-btn">Play Again ❤️</button>
+      <p>David trusted God<br>and the giant fell!<br><strong>The battle is the LORD’s!</strong></p>
+      <button class="big-btn btn-green" id="restart-btn">Play Again ❤️</button>
     </div>
   </div>
 
   <script>
-    // Story order for 3-year-old – starts with Jesse, lion & bear first as requested
+    // Full story order – starts with Jesse + lion & bear as requested
     const scenes = [
-      { file: "videos/08-jesse-sends-david.mp4", title: "Jesse sends David" },
-      { file: "videos/03-david-with-sheep.mp4", title: "David the Shepherd" },
-      { file: "videos/05-david-fights-lion.mp4", title: "David & the Lion" },
-      { file: "videos/06-david-fights-bear.mp4", title: "David & the Bear" },
-      { file: "videos/07-david-tells-saul-lion-bear.mp4", title: "David tells Saul" },
-      { file: "videos/02-goliath-philistine-champion.mp4", title: "Goliath challenges" },
-      { file: "videos/04-david-vs-goliath-victory.mp4", title: "The Victory!" }
+      { file: "videos/08-jesse-sends-david.mp4",    label: "Jesse sends David",     mini: null },
+      { file: "videos/03-david-with-sheep.mp4",      label: "David & the Sheep",     mini: "sheep" },
+      { file: "videos/05-david-fights-lion.mp4",     label: "David & the Lion",      mini: null },
+      { file: "videos/06-david-fights-bear.mp4",     label: "David & the Bear",      mini: null },
+      { file: "videos/07-david-tells-saul-lion-bear.mp4", label: "David tells Saul", mini: "brave" },
+      { file: "videos/02-goliath-philistine-champion.mp4", label: "Goliath challenges", mini: "stone" },
+      { file: "videos/04-david-vs-goliath-victory.mp4", label: "Victory!",            mini: null }
     ];
 
     let current = 0;
-    const video = document.getElementById("video");
-    const progress = document.getElementById("progress");
-    const titleScreen = document.getElementById("title-screen");
-    const playerArea = document.getElementById("player-area");
-    const endScreen = document.getElementById("end-screen");
-    const memory = document.getElementById("memory");
+    let video = document.getElementById("video");
+    let progressBar = document.getElementById("progress-bar");
+    let sceneLabel = document.getElementById("scene-label");
+    let starsEl = document.getElementById("stars");
+    let memory = document.getElementById("memory");
+    let mini = document.getElementById("mini");
+    let miniGrid = document.getElementById("mini-grid");
+    let miniTitle = document.getElementById("mini-title");
+    let miniNext = document.getElementById("mini-next");
 
-    function showScene(index) {
-      if (index >= scenes.length) {
-        playerArea.classList.remove("active");
-        endScreen.classList.add("active");
-        return;
+    // Build stars
+    scenes.forEach((_, i) => {
+      const s = document.createElement("span");
+      s.className = "star";
+      s.textContent = "⭐";
+      s.id = "star-" + i;
+      starsEl.appendChild(s);
+    });
+
+    function lightStars(upTo) {
+      for (let i = 0; i < scenes.length; i++) {
+        document.getElementById("star-" + i).classList.toggle("lit", i <= upTo);
       }
-      current = index;
-      video.src = scenes[current].file;
-      progress.textContent = `Scene ${current + 1} of ${scenes.length} • ${scenes[current].title}`;
-      memory.classList.toggle("show", current === scenes.length - 1);
-      video.load();
-      video.play().catch(() => {}); // autoplay may be blocked, but ok on tap
     }
 
-    document.getElementById("start-btn").addEventListener("click", () => {
-      titleScreen.classList.add("hidden");
-      setTimeout(() => {
-        titleScreen.style.display = "none";
-        playerArea.classList.add("active");
-        showScene(0);
-      }, 500);
+    function showScene(idx) {
+      if (idx >= scenes.length) {
+        document.getElementById("player-area").classList.remove("active");
+        showEnd();
+        return;
+      }
+      current = idx;
+      const sc = scenes[current];
+      video.src = sc.file;
+      sceneLabel.textContent = `Scene ${current+1} of ${scenes.length} • ${sc.label}`;
+      lightStars(current);
+      memory.classList.toggle("show", current === scenes.length - 1);
+      progressBar.style.width = "0%";
+      video.load();
+      video.play().catch(()=>{});
+    }
+
+    // Progress bar
+    video.addEventListener("timeupdate", () => {
+      if (video.duration) {
+        progressBar.style.width = (video.currentTime / video.duration * 100) + "%";
+      }
     });
 
-    document.getElementById("next-btn").addEventListener("click", () => {
+    // After video ends → maybe mini-game then next
+    video.addEventListener("ended", () => {
+      const sc = scenes[current];
+      if (sc.mini) {
+        startMini(sc.mini);
+      } else {
+        // soft delay then auto-ready for next
+      }
+    });
+
+    // ===== MINI GAMES =====
+    function startMini(type) {
+      mini.classList.add("active");
+      miniNext.classList.remove("show");
+      miniGrid.innerHTML = "";
+      let needed = 0, done = 0;
+
+      if (type === "sheep") {
+        miniTitle.textContent = "Tap the happy sheep! 🐑";
+        needed = 4;
+        for (let i = 0; i < 4; i++) {
+          const d = document.createElement("div");
+          d.className = "tap-item";
+          d.innerHTML = `<img src="assets/sheep-icon.jpg" alt="sheep">`;
+          d.onclick = () => {
+            if (!d.classList.contains("done")) {
+              d.classList.add("done");
+              done++;
+              if (done >= needed) miniNext.classList.add("show");
+            }
+          };
+          miniGrid.appendChild(d);
+        }
+      }
+      else if (type === "brave") {
+        miniTitle.textContent = "Tap David to be brave! 💪";
+        needed = 3;
+        for (let i = 0; i < 3; i++) {
+          const d = document.createElement("div");
+          d.className = "tap-item";
+          d.textContent = "🦸";
+          d.style.fontSize = "4.5rem";
+          d.onclick = () => {
+            if (!d.classList.contains("done")) {
+              d.classList.add("done");
+              d.textContent = "✨";
+              done++;
+              if (done >= needed) miniNext.classList.add("show");
+            }
+          };
+          miniGrid.appendChild(d);
+        }
+      }
+      else if (type === "stone") {
+        miniTitle.textContent = "Pick 5 smooth stones! 🪨";
+        needed = 5;
+        for (let i = 0; i < 5; i++) {
+          const d = document.createElement("div");
+          d.className = "tap-item";
+          d.innerHTML = `<img src="assets/sling-icon.jpg" alt="stone">`;
+          d.onclick = () => {
+            if (!d.classList.contains("done")) {
+              d.classList.add("done");
+              done++;
+              if (done >= needed) miniNext.classList.add("show");
+            }
+          };
+          miniGrid.appendChild(d);
+        }
+      }
+    }
+
+    miniNext.onclick = () => {
+      mini.classList.remove("active");
+      // go to next scene
       showScene(current + 1);
-    });
+    };
 
-    document.getElementById("replay-btn").addEventListener("click", () => {
+    // Buttons
+    document.getElementById("start-btn").onclick = () => {
+      document.getElementById("title-screen").classList.add("hidden");
+      setTimeout(() => {
+        document.getElementById("title-screen").style.display = "none";
+        document.getElementById("player-area").classList.add("active");
+        showScene(0);
+      }, 600);
+    };
+
+    document.getElementById("next-btn").onclick = () => {
+      const sc = scenes[current];
+      if (sc.mini && !mini.classList.contains("active")) {
+        // if mini not yet done, force it
+        startMini(sc.mini);
+      } else {
+        showScene(current + 1);
+      }
+    };
+
+    document.getElementById("replay-btn").onclick = () => {
       video.currentTime = 0;
       video.play();
-    });
+    };
 
-    document.getElementById("restart-btn").addEventListener("click", () => {
-      endScreen.classList.remove("active");
-      playerArea.classList.add("active");
+    document.getElementById("restart-btn").onclick = () => {
+      document.getElementById("end-screen").classList.remove("active");
+      document.getElementById("player-area").classList.add("active");
       showScene(0);
-    });
+    };
 
-    // Auto-advance a few seconds after video ends (gives toddler time)
-    video.addEventListener("ended", () => {
-      setTimeout(() => {
-        if (current < scenes.length - 1) {
-          // gentle auto next only if they don't tap
-          // (commented for toddler control – parent can decide)
-          // showScene(current + 1);
-        }
-      }, 1500);
-    });
+    // Confetti
+    function showEnd() {
+      const end = document.getElementById("end-screen");
+      end.classList.add("active");
+      const conf = document.getElementById("confetti");
+      conf.innerHTML = "";
+      const colors = ["#FF6B6B","#FF9A3C","#4CAF50","#42A5F5","#AB47BC","#FFEE58"];
+      for (let i = 0; i < 80; i++) {
+        const p = document.createElement("div");
+        p.className = "c-piece";
+        p.style.left = Math.random() * 100 + "%";
+        p.style.background = colors[Math.floor(Math.random()*colors.length)];
+        p.style.animationDuration = (2.5 + Math.random()*3) + "s";
+        p.style.animationDelay = Math.random()*1.5 + "s";
+        conf.appendChild(p);
+      }
+    }
 
-    // Prevent pinch zoom etc on iPad
+    // Prevent zoom / gestures on iPad
     document.addEventListener("gesturestart", e => e.preventDefault());
+    document.addEventListener("dblclick", e => e.preventDefault());
   </script>
 </body>
 </html>
