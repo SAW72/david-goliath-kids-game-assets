@@ -1,5 +1,5 @@
 /* Simple cache for http(s) play. Not registered on file://. */
-var CACHE = "david-goliath-kids-v1";
+var CACHE = "david-goliath-kids-v2";
 
 var PRECACHE = [
   "./",
@@ -69,11 +69,14 @@ self.addEventListener("fetch", function (event) {
   if (event.request.method !== "GET") return;
   var url = new URL(event.request.url);
   if (url.origin !== location.origin) return;
+  // Safari / Chrome send Range for video. Partial 206 responses cannot be cached
+  // and intercepting them can stall iPad playback.
+  if (event.request.headers.get("range")) return;
 
   event.respondWith(
     caches.match(event.request).then(function (cached) {
       var fetched = fetch(event.request).then(function (res) {
-        if (res && res.ok) {
+        if (res && res.status === 200) {
           var copy = res.clone();
           caches.open(CACHE).then(function (cache) {
             cache.put(event.request, copy);

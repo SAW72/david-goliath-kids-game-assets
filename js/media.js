@@ -69,7 +69,9 @@
       unlock: function () {
         if (unlocked) return Promise.resolve();
         unlocked = true;
-        var tasks = list.map(function (el) {
+        var tasks = list.filter(function (el) {
+          return el !== els.video && (el.currentSrc || el.src);
+        }).map(function (el) {
           try {
             var wasMuted = el.muted;
             el.muted = true;
@@ -98,9 +100,9 @@
             if (ctx.state === "suspended") tasks.push(ctx.resume().catch(function () {}));
           } catch (e) {}
         }
-        return Promise.all(tasks).then(function () {
-          applyVolume();
-        });
+        var settled = Promise.all(tasks).then(function () { applyVolume(); });
+        var cap = new Promise(function (resolve) { setTimeout(resolve, 700); });
+        return Promise.race([settled, cap]);
       },
 
       playAmbient: function () {

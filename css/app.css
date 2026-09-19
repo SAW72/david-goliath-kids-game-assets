@@ -265,10 +265,10 @@ video {
 }
 
 .tap-item {
-  width: min(28vw, 120px);
-  height: min(28vw, 120px);
-  min-width: 88px;
-  min-height: 88px;
+  width: min(30vw, 132px);
+  height: min(30vw, 132px);
+  min-width: 100px;
+  min-height: 100px;
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 8px 20px rgba(0, 0, 0, .14);
@@ -421,6 +421,7 @@ video {
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: auto;
 }
 
 #level-badge {
@@ -438,7 +439,7 @@ video {
 #pause-overlay {
   position: absolute;
   inset: 0;
-  z-index: 80;
+  z-index: 250;
   background: rgba(255, 248, 225, .96);
   display: none;
   flex-direction: column;
@@ -461,7 +462,7 @@ video {
   margin-bottom: 8px;
 }
 
-@media (orientation: landscape) {
+@media (orientation: landscape) and (max-height: 920px) {
   #title-screen {
     flex-direction: row;
     gap: 20px;

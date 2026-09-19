@@ -25,3 +25,5 @@
 - Hard capped at 4–5 gentle taps; confetti is fewer, slower, round, one-shot
 - Safe-area padding, 64px tap targets, landscape player row
 - Logic split into `js/story.js`, `js/flow.js`, `js/media.js`, `js/minis.js`, `js/game.js` (classic scripts, no build step)
+- Service worker skips HTTP Range / 206 video responses (Safari playback)
+- First Play no longer waits on audio unlock, so a slow Safari gesture cannot freeze the title button

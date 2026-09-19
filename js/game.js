@@ -226,10 +226,9 @@
       level = name;
       levelBadge.hidden = false;
       levelBadge.textContent = levels[level].name;
-      media.unlock().then(function () {
-        media.playAmbient();
-        applyAction(flow.startStory());
-      });
+      media.unlock();
+      media.playAmbient();
+      applyAction(flow.startStory());
     }
 
     video.addEventListener("timeupdate", function () {
@@ -246,11 +245,10 @@
     });
 
     qs("start-btn").addEventListener("click", function () {
-      media.unlock().then(function () {
-        media.playAmbient();
-        showScreen("level-screen");
-        levelBadge.hidden = true;
-      });
+      media.unlock();
+      media.playAmbient();
+      showScreen("level-screen");
+      levelBadge.hidden = true;
     });
 
     document.querySelectorAll("[data-level]").forEach(function (btn) {
