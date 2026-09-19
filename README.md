@@ -17,7 +17,8 @@ The first `index.html` build was unfinished. This revision is a **local playable
 - Hard mode and confetti were busier than needed for about age 3
 
 **Now**
-- 8 scenes, Pause + Home, visibility pause, Safari unlock, guarded Next/mini flow
+- 7 story scenes, plus a **David’s hills** bonus interlude using `videos/01-david-shepherd-boy.mp4`
+- Pause + Home, visibility pause, Safari unlock, guarded Next/mini flow
 - Classic HTML / CSS / JS (no build step). Game data and flow are in `js/`, separate from the web shell
 - Optional service worker on http(s) only — does not run on `file://`
 
@@ -55,6 +56,7 @@ Do not collect accounts, analytics, or personal data. This build does not.
 | **Again** | Replay this scene’s video and voices |
 | **⏸ Pause** | Stops video and voices. Large Resume + Home |
 | **⌂ Home** | Back to the title. Stops media |
+| **💛 Hills** | Optional encore of David on the hills (same spare clip). Does not skip the story |
 | Volume / mute | Always available. No tracking |
 
 Home and Pause stay on screen during the story. Switching away from Safari pauses media; coming back resumes unless you had paused.
@@ -63,16 +65,16 @@ Home and Pause stay on screen during the story. Switching away from Safari pause
 
 Toddler-friendly telling of Hebrew 1 Samuel 17 (soft lion / bear / Goliath art, not scary):
 
-1. David the shepherd boy (`videos/01-david-shepherd-boy.mp4`)
-2. Jesse sends David
-3. David & the sheep — tap sheep
+1. Jesse sends David
+2. David & the sheep — tap sheep
+3. **David’s hills interlude** (`videos/01-david-shepherd-boy.mp4`) — after the sheep mini
 4. David & the lion
 5. David & the bear
 6. David tells Saul — tap David
 7. Goliath challenges — tap stones
 8. Victory
 
-There is no dedicated shepherd voice clip in the repo, so that scene uses the video plus a soft sheep sound. Other scenes keep the existing harp, birds, narrations, and character voices.
+The same spare clip also plays as a **welcome** after Easy / Medium / Hard (before Jesse), and anytime from **💛 Hills** during a scene. It loops gently until **Keep going**. No extra shepherd narration file is in the repo.
 
 ## Project layout
 

@@ -21,6 +21,7 @@
       <div id="chrome-play" hidden>
         <button type="button" class="icon-btn" id="home-btn" aria-label="Home">⌂ Home</button>
         <button type="button" class="icon-btn" id="pause-btn" aria-label="Pause">⏸ Pause</button>
+        <button type="button" class="icon-btn hills-btn" id="hills-btn" hidden aria-label="David's hills">💛 Hills</button>
       </div>
       <div id="level-badge" hidden>Easy ⭐</div>
       <div id="audio-controls">
@@ -54,7 +55,7 @@
         <button type="button" id="tap-to-play" hidden>▶ Tap to play</button>
       </div>
       <div id="player-side">
-        <div id="scene-label">Scene 1 of 8</div>
+        <div id="scene-label">Scene 1 of 7</div>
         <div id="stars" aria-hidden="true"></div>
         <div id="controls">
           <button type="button" class="big-btn btn-green" id="next-btn">Next ▶</button>
@@ -62,6 +63,20 @@
         </div>
       </div>
       <div id="memory">✨ The battle is the LORD’s! ✨</div>
+    </div>
+
+    <div id="interlude" aria-hidden="true">
+      <div class="interlude-glow" aria-hidden="true"></div>
+      <div class="interlude-sparkles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p id="interlude-kicker" class="interlude-kicker">A little hello</p>
+      <h2 id="interlude-title">David’s hills</h2>
+      <div class="interlude-frame">
+        <video id="interlude-video" playsinline webkit-playsinline loop></video>
+      </div>
+      <p id="interlude-caption" class="interlude-caption">David was a shepherd boy 💛</p>
+      <button type="button" class="big-btn btn-play" id="interlude-next">Keep going ▶</button>
     </div>
 
     <div id="mini" aria-hidden="true">

@@ -10,13 +10,14 @@
     var hidden = false;
     var bgWanted = false;
     var videoWasPlaying = false;
+    var interludeWasPlaying = false;
     var voiceWas = { narr: false, char: false, sfx: false };
     var onHidden = null;
     var onVisible = null;
 
     var list = [
       els.bgMusic, els.birds, els.harpNote, els.narr,
-      els.charVoice, els.sfx, els.celebrate, els.tweet, els.video
+      els.charVoice, els.sfx, els.celebrate, els.tweet, els.video, els.interludeVideo
     ].filter(Boolean);
 
     function applyVolume() {
@@ -30,6 +31,7 @@
       if (els.celebrate) els.celebrate.volume = v * 0.9;
       if (els.tweet) els.tweet.volume = v * 0.5;
       if (els.video) els.video.volume = v * 0.45;
+      if (els.interludeVideo) els.interludeVideo.volume = v * 0.5;
     }
 
     function setMutedFlag(all, value) {
@@ -145,11 +147,16 @@
           els.video.pause();
           try { els.video.removeAttribute("src"); els.video.load(); } catch (e) {}
         }
+        if (els.interludeVideo) {
+          els.interludeVideo.pause();
+          try { els.interludeVideo.removeAttribute("src"); els.interludeVideo.load(); } catch (e) {}
+        }
       },
 
       pauseForBackground: function () {
         hidden = true;
         videoWasPlaying = !!(els.video && !els.video.paused && !els.video.ended);
+        interludeWasPlaying = !!(els.interludeVideo && !els.interludeVideo.paused);
         voiceWas = {
           narr: !!(els.narr && !els.narr.paused),
           char: !!(els.charVoice && !els.charVoice.paused),
@@ -164,10 +171,12 @@
         if (userPaused) return;
         if (bgWanted && !muted) this.playAmbient();
         if (videoWasPlaying && els.video) els.video.play().catch(function () {});
+        if (interludeWasPlaying && els.interludeVideo) els.interludeVideo.play().catch(function () {});
         if (voiceWas.narr && els.narr) els.narr.play().catch(function () {});
         if (voiceWas.char && els.charVoice) els.charVoice.play().catch(function () {});
         if (voiceWas.sfx && els.sfx) els.sfx.play().catch(function () {});
         videoWasPlaying = false;
+        interludeWasPlaying = false;
         voiceWas = { narr: false, char: false, sfx: false };
         if (onVisible) onVisible();
       },

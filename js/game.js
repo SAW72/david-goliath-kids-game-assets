@@ -22,7 +22,8 @@
       sfx: qs("sfx"),
       celebrate: qs("celebrate"),
       tweet: qs("tweet"),
-      video: qs("video")
+      video: qs("video"),
+      interludeVideo: qs("interlude-video")
     });
 
     var video = qs("video");
@@ -40,6 +41,13 @@
     var tapToPlay = qs("tap-to-play");
     var chromePlay = qs("chrome-play");
     var muteBtn = qs("mute-btn");
+    var interlude = qs("interlude");
+    var interludeVideo = qs("interlude-video");
+    var interludeKicker = qs("interlude-kicker");
+    var interludeTitle = qs("interlude-title");
+    var interludeCaption = qs("interlude-caption");
+    var hillsBtn = qs("hills-btn");
+    var bonus = G.INTERLUDE;
 
     scenes.forEach(function (_, i) {
       var s = document.createElement("span");
@@ -62,8 +70,9 @@
     function showScreen(id) {
       document.querySelectorAll(".screen").forEach(function (s) { s.classList.remove("active"); });
       qs(id).classList.add("active");
-      var playing = id === "player-area";
+      var playing = id === "player-area" || (interlude && interlude.classList.contains("active"));
       chromePlay.hidden = !playing;
+      if (hillsBtn) hillsBtn.hidden = id !== "player-area" || interlude.classList.contains("active");
       levelBadge.hidden = !playing && id !== "level-screen";
       if (id !== "player-area") closeMini();
       if (id !== "end-screen") clearConfetti();
@@ -86,10 +95,48 @@
       pauseOverlay.setAttribute("aria-hidden", "true");
     }
 
+    function closeInterludeUi() {
+      interlude.classList.remove("active");
+      interlude.setAttribute("aria-hidden", "true");
+      interludeVideo.pause();
+      if (hillsBtn) hillsBtn.hidden = !qs("player-area").classList.contains("active");
+    }
+
+    function openInterlude(kind) {
+      hidePause();
+      closeMini();
+      clearSceneTimers();
+      video.pause();
+      media.stopVoices();
+      var kicker = bonus.kickerWelcome;
+      if (kind === "between") kicker = bonus.kickerBetween;
+      if (kind === "bonus") kicker = bonus.kickerBonus;
+      interludeKicker.textContent = kicker;
+      interludeTitle.textContent = bonus.title;
+      interludeCaption.textContent = bonus.caption;
+      interlude.classList.add("active");
+      interlude.setAttribute("aria-hidden", "false");
+      if (hillsBtn) hillsBtn.hidden = true;
+      chromePlay.hidden = false;
+      tapToPlay.hidden = true;
+      interludeVideo.src = bonus.file;
+      interludeVideo.loop = true;
+      interludeVideo.load();
+      interludeVideo.play().catch(function () {});
+      media.playOneShot(qs("harp-note"));
+      later(function () { media.playOneShot(qs("tweet")); }, 400);
+    }
+
     function applyAction(action) {
       if (!action || action.type === "ignore") return;
-      if (action.type === "scene") showScene(action.state.index);
-      else if (action.type === "startMini") openMini(action.mini);
+      if (action.type === "scene") {
+        closeInterludeUi();
+        showScene(action.state.index);
+      } else if (action.type === "interlude") openInterlude(action.kind);
+      else if (action.type === "resumeScene") {
+        closeInterludeUi();
+        if (!video.ended) video.play().catch(function () { tapToPlay.hidden = false; });
+      } else if (action.type === "startMini") openMini(action.mini);
       else if (action.type === "end") showEnd();
       else if (action.type === "replay") replayScene();
       else if (action.type === "paused") showPause();
@@ -144,6 +191,7 @@
       clearSceneTimers();
       mini.classList.add("active");
       mini.setAttribute("aria-hidden", "false");
+      if (hillsBtn) hillsBtn.hidden = true;
       G.startMini({
         grid: miniGrid,
         titleEl: miniTitle,
@@ -159,6 +207,7 @@
 
     function showPause() {
       video.pause();
+      interludeVideo.pause();
       qs("bg-music").pause();
       qs("birds").pause();
       qs("narr").pause();
@@ -172,6 +221,10 @@
       hidePause();
       if (document.hidden) return;
       media.playAmbient();
+      if (interlude.classList.contains("active")) {
+        interludeVideo.play().catch(function () {});
+        return;
+      }
       if (!mini.classList.contains("active") && video.src && !video.ended) {
         video.play().catch(function () { tapToPlay.hidden = false; });
       }
@@ -182,6 +235,7 @@
       clearConfetti();
       hidePause();
       closeMini();
+      closeInterludeUi();
       media.stopAll();
       tapToPlay.hidden = true;
       memory.classList.remove("show");
@@ -198,6 +252,7 @@
 
     function showEnd() {
       closeMini();
+      closeInterludeUi();
       hidePause();
       clearSceneTimers();
       video.pause();
@@ -255,6 +310,8 @@
       btn.addEventListener("click", function () { chooseLevel(btn.dataset.level); });
     });
 
+    qs("interlude-next").addEventListener("click", function () { applyAction(flow.closeInterlude()); });
+    qs("hills-btn").addEventListener("click", function () { applyAction(flow.openBonus()); });
     qs("next-btn").addEventListener("click", function () { applyAction(flow.requestNext()); });
     qs("replay-btn").addEventListener("click", function () { applyAction(flow.replay()); });
     qs("mini-next").addEventListener("click", function () { applyAction(flow.completeMini()); });
@@ -272,6 +329,7 @@
       media.stopVoices();
       hidePause();
       closeMini();
+      closeInterludeUi();
       chromePlay.hidden = true;
       showScreen("level-screen");
     });

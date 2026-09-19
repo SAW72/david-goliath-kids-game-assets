@@ -3,22 +3,22 @@
  * Keep this file free of DOM / platform-shell code so a future app
  * wrapper can reuse the same scene list and level settings.
  *
- * Order follows a toddler-friendly telling of Hebrew 1 Samuel 17:
- * David the shepherd → Jesse sends him → sheep → lion → bear →
- * David tells Saul → Goliath challenges → victory.
+ * Numbered story: Jesse → sheep → lion → bear → Saul → Goliath → victory.
+ * The spare shepherd clip is a bonus interlude (welcome, after sheep, tap-in).
  * Lion / bear / Goliath stay the existing soft cartoon framing.
  */
 (function (root) {
+  const INTERLUDE = {
+    id: "hills",
+    file: "videos/01-david-shepherd-boy.mp4",
+    title: "David’s hills",
+    caption: "David was a shepherd boy 💛",
+    kickerWelcome: "A little hello",
+    kickerBetween: "A quiet moment",
+    kickerBonus: "David’s song"
+  };
+
   const SCENES = [
-    {
-      id: "shepherd",
-      file: "videos/01-david-shepherd-boy.mp4",
-      label: "David the shepherd boy",
-      narr: null,
-      char: null,
-      sfx: "assets/audio/sheep_baa.mp3",
-      mini: null
-    },
     {
       id: "jesse",
       file: "videos/08-jesse-sends-david.mp4",
@@ -35,7 +35,8 @@
       narr: "assets/audio/narr_sheep.mp3",
       char: null,
       sfx: "assets/audio/sheep_baa.mp3",
-      mini: "sheep"
+      mini: "sheep",
+      interludeAfter: true
     },
     {
       id: "lion",
@@ -107,7 +108,7 @@
     sling: "assets/sling-icon.jpg"
   };
 
-  const api = { SCENES: SCENES, LEVELS: LEVELS, AUDIO: AUDIO, ICONS: ICONS };
+  const api = { SCENES: SCENES, INTERLUDE: INTERLUDE, LEVELS: LEVELS, AUDIO: AUDIO, ICONS: ICONS };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   root.DavidGame = Object.assign(root.DavidGame || {}, api);
 })(typeof globalThis !== "undefined" ? globalThis : this);

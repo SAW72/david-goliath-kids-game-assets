@@ -14,6 +14,9 @@
     var paused = false;
     var finished = false;
     var lockUntil = 0;
+    var interludeOpen = false;
+    var interludeKind = null;
+    var betweenUsed = false;
 
     function scene() {
       return scenes[index] || null;
@@ -26,6 +29,9 @@
         miniDone: miniDone,
         paused: paused,
         finished: finished,
+        interludeOpen: interludeOpen,
+        interludeKind: interludeKind,
+        betweenUsed: betweenUsed,
         scene: scene()
       };
     }
@@ -59,11 +65,31 @@
         paused = false;
         finished = false;
         lockUntil = 0;
-        return { type: "scene", state: snapshot() };
+        betweenUsed = false;
+        interludeOpen = true;
+        interludeKind = "welcome";
+        return { type: "interlude", kind: "welcome", state: snapshot() };
+      },
+
+      closeInterlude: function () {
+        if (!interludeOpen || paused) return { type: "ignore", state: snapshot() };
+        var kind = interludeKind;
+        interludeOpen = false;
+        interludeKind = null;
+        if (kind === "welcome") return { type: "scene", state: snapshot() };
+        if (kind === "between") return goForward();
+        return { type: "resumeScene", state: snapshot() };
+      },
+
+      openBonus: function () {
+        if (paused || finished || miniOpen || interludeOpen) return { type: "ignore", state: snapshot() };
+        interludeOpen = true;
+        interludeKind = "bonus";
+        return { type: "interlude", kind: "bonus", state: snapshot() };
       },
 
       requestNext: function () {
-        if (paused || finished || miniOpen) return { type: "ignore", state: snapshot() };
+        if (paused || finished || miniOpen || interludeOpen) return { type: "ignore", state: snapshot() };
         if (!takeLock()) return { type: "ignore", state: snapshot() };
         var sc = scene();
         if (sc && sc.mini && !miniDone) {
@@ -74,7 +100,7 @@
       },
 
       onVideoEnded: function () {
-        if (paused || finished || miniOpen) return { type: "ignore", state: snapshot() };
+        if (paused || finished || miniOpen || interludeOpen) return { type: "ignore", state: snapshot() };
         var sc = scene();
         if (sc && sc.mini && !miniDone) {
           miniOpen = true;
@@ -84,9 +110,15 @@
       },
 
       completeMini: function () {
-        if (!miniOpen || finished) return { type: "ignore", state: snapshot() };
+        if (!miniOpen || finished || interludeOpen) return { type: "ignore", state: snapshot() };
         miniOpen = false;
         miniDone = true;
+        if (scene() && scene().interludeAfter && !betweenUsed) {
+          betweenUsed = true;
+          interludeOpen = true;
+          interludeKind = "between";
+          return { type: "interlude", kind: "between", state: snapshot() };
+        }
         return goForward();
       },
 
@@ -109,11 +141,14 @@
         paused = false;
         finished = false;
         lockUntil = 0;
+        interludeOpen = false;
+        interludeKind = null;
+        betweenUsed = false;
         return { type: "home", state: snapshot() };
       },
 
       replay: function () {
-        if (paused || finished || miniOpen) return { type: "ignore", state: snapshot() };
+        if (paused || finished || miniOpen || interludeOpen) return { type: "ignore", state: snapshot() };
         return { type: "replay", state: snapshot() };
       }
     };

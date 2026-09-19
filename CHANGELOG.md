@@ -14,6 +14,11 @@
 - Layout ignored safe-area insets; mute hit target was 48px; landscape was a tall portrait stack
 - Game logic lived entirely inside `index.html`
 
+### David’s hills bonus (follow-up)
+- `videos/01-david-shepherd-boy.mp4` is no longer a numbered story beat
+- It plays as a gentle looping interlude: after level pick (welcome), after the sheep mini (between scenes), and from the **💛 Hills** button (tap-in encore)
+- Soft glow / sparkles, harp note; `prefers-reduced-motion` turns the motion off
+
 ### Fixes
 - Shepherd-boy clip is scene 1 (8 scenes, toddler 1 Samuel 17 order)
 - Large Pause + Home on the play chrome, pause overlay, and end screen
