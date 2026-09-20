@@ -67,16 +67,16 @@
     .char-card:active{transform:scale(.9)}
     .char-card.active{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,213,79,.4),0 6px 16px rgba(0,0,0,.2);transform:scale(1.08)}
     .char-card .char-name{position:absolute;font-size:.65rem;font-weight:800;color:var(--brown);bottom:-16px;left:50%;transform:translateX(-50%);white-space:nowrap}
-    #sling-game{position:absolute;inset:0;z-index:60;background:rgba(255,248,225,.98);display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+    #sling-game{position:absolute;inset:0;z-index:60;background:rgba(255,248,225,.98);display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;padding-bottom:env(safe-area-inset-bottom);touch-action:none;overscroll-behavior:none}
     #sling-game.active{display:flex}
-    #sling-canvas{width:min(90vw,520px);height:min(50vh,360px);background:linear-gradient(180deg,#B3E5FC,#E1F5FE);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);touch-action:none;position:relative;overflow:hidden}
+    #sling-canvas{width:min(94vw,560px);height:min(58vh,420px);background:linear-gradient(180deg,#B3E5FC,#E1F5FE);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);touch-action:none;-webkit-user-select:none;user-select:none;position:relative;overflow:hidden;cursor:pointer}
     #sling-hint{font-size:1.3rem;font-weight:800;color:var(--brown);margin-bottom:12px;text-align:center}
     #sling-score{font-size:1.1rem;color:var(--darkgreen);font-weight:800;margin-top:10px}
-    .goliath-target{position:absolute;width:clamp(120px,32vw,180px);height:clamp(120px,32vw,180px);cursor:pointer;transition:transform .15s;border-radius:50%;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.2);background:#fff;border:5px solid #FFD54F;right:4%;top:10%}
-    .goliath-target img{width:100%;height:100%;object-fit:cover;object-position:center 12%;display:block}
+    .goliath-target{position:absolute;width:clamp(120px,32vw,180px);height:clamp(120px,32vw,180px);pointer-events:none;transition:transform .15s;border-radius:50%;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.2);background:#fff;border:5px solid #FFD54F;right:4%;top:10%}
+    .goliath-target img{width:100%;height:100%;object-fit:cover;object-position:center 12%;display:block;pointer-events:none}
     .sling-base{position:absolute;left:2%;bottom:2%;width:clamp(80px,22vw,130px);pointer-events:none}
     .sling-base img{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18))}
-    .stone-proj{position:absolute;font-size:2.4rem;line-height:1;z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25));touch-action:none}
+    .stone-proj{position:absolute;font-size:2.4rem;line-height:1;z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25));pointer-events:none}
     #sling-next{display:none;margin-top:12px}
     #sling-next.show{display:block}
     .hint-pulse{animation:pulse 1.2s infinite}
@@ -343,12 +343,22 @@
     function bindSlingOnce(){
       if(slingBound) return;
       slingBound=true;
-      slingCanvas.addEventListener("mousedown",e=>{if(slingDrag)slingDrag.down(e)});
-      slingCanvas.addEventListener("touchstart",e=>{if(slingDrag)slingDrag.down(e)},{passive:false});
-      window.addEventListener("mousemove",e=>{if(slingDrag)slingDrag.move(e)});
-      window.addEventListener("touchmove",e=>{if(slingDrag)slingDrag.move(e)},{passive:false});
-      window.addEventListener("mouseup",e=>{if(slingDrag)slingDrag.up(e)});
-      window.addEventListener("touchend",e=>{if(slingDrag)slingDrag.up(e)});
+      const opts={passive:false};
+      function onDown(e){
+        if(!slingDrag) return;
+        if(e.pointerId!=null && slingCanvas.setPointerCapture){
+          try{slingCanvas.setPointerCapture(e.pointerId)}catch(_){}
+        }
+        slingDrag.down(e);
+      }
+      function onMove(e){ if(slingDrag) slingDrag.move(e); }
+      function onUp(e){ if(slingDrag) slingDrag.up(e); }
+      ["pointerdown","mousedown","touchstart"].forEach(ev=>slingCanvas.addEventListener(ev,onDown,opts));
+      ["pointermove","mousemove","touchmove"].forEach(ev=>slingCanvas.addEventListener(ev,onMove,opts));
+      ["pointerup","pointercancel","mouseup","touchend","touchcancel"].forEach(ev=>slingCanvas.addEventListener(ev,onUp,opts));
+      document.addEventListener("pointerup",onUp,opts);
+      document.addEventListener("touchend",onUp,opts);
+      document.addEventListener("mouseup",onUp,opts);
     }
     function buildSling(){
       bindSlingOnce();
@@ -369,11 +379,16 @@
       stone.style.transition="none";
       slingCanvas.appendChild(stone);
       let dragging=false, launched=false;
-      function point(e){return e.touches?e.touches[0]:e}
+      function point(e){
+        if(e.changedTouches && e.changedTouches.length) return e.changedTouches[0];
+        if(e.touches && e.touches.length) return e.touches[0];
+        if(typeof e.clientX==="number") return e;
+        return null;
+      }
       function placeStone(clientX, clientY){
         const r=slingCanvas.getBoundingClientRect();
-        const x=Math.max(8, Math.min(r.width*0.55, clientX-r.left));
-        const y=Math.max(20, Math.min(r.height-40, clientY-r.top));
+        const x=Math.max(8, Math.min(r.width*0.58, clientX-r.left));
+        const y=Math.max(16, Math.min(r.height-36, clientY-r.top));
         stone.style.left=(x-stone.offsetWidth/2)+"px";
         stone.style.top=(y-stone.offsetHeight/2)+"px";
       }
@@ -406,19 +421,22 @@
           slingHint.classList.remove("hint-pulse");
           const t=point(e);
           if(t) placeStone(t.clientX, t.clientY);
-          e.preventDefault();
+          if(e.cancelable) e.preventDefault();
+          e.stopPropagation();
         },
         move(e){
           if(!dragging||launched)return;
           const t=point(e);
           if(t) placeStone(t.clientX, t.clientY);
-          e.preventDefault();
+          if(e.cancelable) e.preventDefault();
+          e.stopPropagation();
         },
         up(e){
           if(!dragging||launched)return;
           dragging=false;
           launched=true;
           flyToGoliath();
+          if(e && e.cancelable) e.preventDefault();
           setTimeout(scoreHit, 460);
         }
       };
