@@ -310,7 +310,7 @@
       const cfg=levels[level];
       let needed=0,done=0;
       if(type==="sheep"){needed=cfg.sheep;miniTitle.textContent=`Tap the happy sheep! (${needed}) 🐑`}
-      else if(type==="brave"){needed=cfg.brave;miniTitle.textContent=`Tap David to be brave! (${needed}) 💪`}
+      else if(type==="brave"){needed=cfg.brave;miniTitle.textContent=`Tap the rocks! (${needed}) 🪨`}
       else if(type==="stone"){needed=cfg.stone;miniTitle.textContent=`Pick smooth stones! (${needed}) 🪨`}
 
       function item(content,isImg=false){
@@ -324,7 +324,7 @@
       }
       for(let i=0;i<needed;i++){
         if(type==="sheep")item(`<img src="assets/sheep-icon.jpg">`,true);
-        else if(type==="brave")item("🦸");
+        else if(type==="brave")item("🪨");
         else item(`<img src="assets/sling-icon.jpg">`,true);
       }
     }
