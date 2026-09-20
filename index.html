@@ -72,11 +72,11 @@
     #sling-canvas{width:min(90vw,520px);height:min(50vh,360px);background:linear-gradient(180deg,#B3E5FC,#E1F5FE);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);touch-action:none;position:relative;overflow:hidden}
     #sling-hint{font-size:1.3rem;font-weight:800;color:var(--brown);margin-bottom:12px;text-align:center}
     #sling-score{font-size:1.1rem;color:var(--darkgreen);font-weight:800;margin-top:10px}
-    .goliath-target{position:absolute;width:clamp(96px,24vw,150px);height:clamp(96px,24vw,150px);cursor:pointer;transition:transform .1s;border-radius:50%;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.2);background:#fff;border:4px solid #FFD54F}
+    .goliath-target{position:absolute;width:clamp(120px,32vw,180px);height:clamp(120px,32vw,180px);cursor:pointer;transition:transform .15s;border-radius:50%;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.2);background:#fff;border:5px solid #FFD54F;right:4%;top:10%}
     .goliath-target img{width:100%;height:100%;object-fit:cover;object-position:center 12%;display:block}
-    .sling-base{position:absolute;left:3%;bottom:3%;width:clamp(92px,26vw,160px);pointer-events:none}
+    .sling-base{position:absolute;left:2%;bottom:2%;width:clamp(80px,22vw,130px);pointer-events:none}
     .sling-base img{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18))}
-    .stone-proj{position:absolute;font-size:1.8rem;pointer-events:none;z-index:2}
+    .stone-proj{position:absolute;font-size:2.4rem;line-height:1;z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25));touch-action:none}
     #sling-next{display:none;margin-top:12px}
     #sling-next.show{display:block}
     .hint-pulse{animation:pulse 1.2s infinite}
@@ -356,7 +356,6 @@
       const g=document.createElement("div");
       g.className="goliath-target";
       g.innerHTML='<img src="assets/goliath-face.jpg" alt="Goliath">';
-      g.style.right="6%";g.style.top="16%";
       slingCanvas.appendChild(g);
       const base=document.createElement("div");
       base.className="sling-base";
@@ -365,56 +364,64 @@
       const stone=document.createElement("div");
       stone.className="stone-proj";
       stone.textContent="🪨";
-      stone.style.left="18%";stone.style.bottom="16%";
+      stone.style.left="12%";
+      stone.style.top="62%";
       stone.style.transition="none";
       slingCanvas.appendChild(stone);
       let dragging=false, launched=false;
-      const rect=()=>slingCanvas.getBoundingClientRect();
+      function point(e){return e.touches?e.touches[0]:e}
+      function placeStone(clientX, clientY){
+        const r=slingCanvas.getBoundingClientRect();
+        const x=Math.max(8, Math.min(r.width*0.55, clientX-r.left));
+        const y=Math.max(20, Math.min(r.height-40, clientY-r.top));
+        stone.style.left=(x-stone.offsetWidth/2)+"px";
+        stone.style.top=(y-stone.offsetHeight/2)+"px";
+      }
+      function flyToGoliath(){
+        const gx=g.offsetLeft + g.offsetWidth/2 - stone.offsetWidth/2;
+        const gy=g.offsetTop + g.offsetHeight/2 - stone.offsetHeight/2;
+        stone.style.transition="left 0.45s ease-out, top 0.45s ease-out";
+        stone.style.left=gx+"px";
+        stone.style.top=gy+"px";
+      }
+      function scoreHit(){
+        slingHits++;
+        if(!muted){harpNote.currentTime=0;harpNote.play().catch(()=>{})}
+        g.style.transform="scale(1.18) rotate(8deg)";
+        setTimeout(()=>g.style.transform="",220);
+        slingScore.textContent=`Hits: ${slingHits} / ${slingNeeded}`;
+        if(slingHits>=slingNeeded){
+          slingHint.textContent="You hit Goliath! God gave David the win! 🎉";
+          slingNext.classList.add("show");
+          slingDrag=null;
+        } else {
+          slingHint.textContent=`Nice shot! ${slingNeeded-slingHits} more! 💪`;
+          setTimeout(buildSling,650);
+        }
+      }
       slingDrag={
         down(e){
           if(launched) return;
           dragging=true;
           slingHint.classList.remove("hint-pulse");
+          const t=point(e);
+          if(t) placeStone(t.clientX, t.clientY);
           e.preventDefault();
         },
         move(e){
           if(!dragging||launched)return;
-          const t=point(e); const r=rect();
-          let nx=Math.max(5,Math.min(45,(t.clientX-r.left)/r.width*100));
-          let ny=Math.max(5,Math.min(80,100-(t.clientY-r.top)/r.height*100));
-          stone.style.left=nx+"%";stone.style.bottom=ny+"%";
+          const t=point(e);
+          if(t) placeStone(t.clientX, t.clientY);
           e.preventDefault();
         },
         up(e){
           if(!dragging||launched)return;
-          dragging=false; launched=true;
-          stone.style.transition="left 0.6s ease-out, bottom 0.6s ease-out";
-          stone.style.left="85%";stone.style.bottom="45%";
-          setTimeout(()=>{
-            const gr=g.getBoundingClientRect();const sr=stone.getBoundingClientRect();
-            const hit=Math.abs(gr.left+gr.width/2-(sr.left+sr.width/2))<60 && Math.abs(gr.top+gr.height/2-(sr.top+sr.height/2))<60;
-            if(hit){
-              slingHits++;
-              if(!muted){harpNote.currentTime=0;harpNote.play().catch(()=>{})}
-              g.style.transform="scale(1.3) rotate(10deg)";
-              setTimeout(()=>g.style.transform="",200);
-              slingScore.textContent=`Hits: ${slingHits} / ${slingNeeded}`;
-              if(slingHits>=slingNeeded){
-                slingHint.textContent="You hit Goliath! God gave David the win! 🎉";
-                slingNext.classList.add("show");
-                slingDrag=null;
-              } else {
-                slingHint.textContent=`Nice! Try again — ${slingNeeded-slingHits} more! 💪`;
-                setTimeout(buildSling,700);
-              }
-            } else {
-              slingHint.textContent="Almost! Pull back farther and aim high! 🎯";
-              setTimeout(buildSling,700);
-            }
-          },620);
+          dragging=false;
+          launched=true;
+          flyToGoliath();
+          setTimeout(scoreHit, 460);
         }
       };
-      function point(e){return e.touches?e.touches[0]:e}
     }
     slingNext.onclick=()=>{slingGame.classList.remove("active");showScene(current+1)};
     slingBtn.onclick=()=>startSling();
