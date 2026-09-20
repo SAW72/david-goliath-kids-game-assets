@@ -77,6 +77,8 @@
     .sling-base{position:absolute;left:2%;bottom:2%;width:clamp(80px,22vw,130px);pointer-events:none}
     .sling-base img{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18))}
     .stone-proj{position:absolute;font-size:2.4rem;line-height:1;z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25));pointer-events:none}
+    .stone-proj.cane{font-size:0;width:clamp(42px,12vw,62px)}
+    .stone-proj.cane img{width:100%;height:auto;display:block;pointer-events:none}
     #sling-next{display:none;margin-top:12px}
     #sling-next.show{display:block}
     .hint-pulse{animation:pulse 1.2s infinite}
@@ -151,21 +153,21 @@
 
   <script>
     const scenes = [
-      {file:"videos/08-jesse-sends-david.mp4", label:"Jesse sends David", chars:["jesse","david"], mini:null, sling:false},
-      {file:"videos/03-david-with-sheep.mp4", label:"David & the Sheep", chars:["david","sheep"], mini:"sheep", sling:false},
-      {file:"videos/05-david-fights-lion.mp4", label:"David & the Lion", chars:["david","lion"], mini:null, sling:false},
-      {file:"videos/06-david-fights-bear.mp4", label:"David & the Bear", chars:["david","bear"], mini:null, sling:false},
-      {file:"videos/07-david-tells-saul-lion-bear.mp4", label:"David tells Saul", chars:["david","saul"], mini:"brave", sling:false},
-      {file:"videos/02-goliath-philistine-champion.mp4", label:"Goliath challenges", chars:["goliath","david"], mini:null, sling:true},
-      {file:"videos/04-david-vs-goliath-victory.mp4", label:"Victory!", chars:["david"], mini:null, sling:false}
+      {file:"videos/08-jesse-sends-david.mp4", label:"Jesse sends David", chars:["jesse","david"], mini:null, aim:null},
+      {file:"videos/03-david-with-sheep.mp4", label:"David & the Sheep", chars:["david","sheep"], mini:"sheep", aim:null},
+      {file:"videos/05-david-fights-lion.mp4", label:"David & the Lion", chars:["david","lion"], mini:null, aim:"lion"},
+      {file:"videos/06-david-fights-bear.mp4", label:"David & the Bear", chars:["david","bear"], mini:null, aim:"bear"},
+      {file:"videos/07-david-tells-saul-lion-bear.mp4", label:"David tells Saul", chars:["david","saul"], mini:"brave", aim:null},
+      {file:"videos/02-goliath-philistine-champion.mp4", label:"Goliath challenges", chars:["goliath","david"], mini:null, aim:"goliath"},
+      {file:"videos/04-david-vs-goliath-victory.mp4", label:"Victory!", chars:["david"], mini:null, aim:null}
     ];
 
     const charInfo = {
       jesse:{emoji:"👴",name:"Jesse",color:"#8D6E63"},
       david:{emoji:"",img:"assets/david-face.jpg",name:"David",color:"#42A5F5"},
       sheep:{emoji:"🐑",name:"Sheep",color:"#FFF"},
-      lion:{emoji:"🦁",name:"Lion",color:"#FFB74D"},
-      bear:{emoji:"🐻",name:"Bear",color:"#8D6E63"},
+      lion:{emoji:"",img:"assets/lion-face.jpg",name:"Lion",color:"#FFB74D"},
+      bear:{emoji:"",img:"assets/bear-face.jpg",name:"Bear",color:"#8D6E63"},
       saul:{emoji:"🤴",name:"Saul",color:"#7E57C2"},
       goliath:{emoji:"",img:"assets/goliath-face.jpg",name:"Goliath",color:"#EF5350"}
     };
@@ -176,8 +178,32 @@
       hard:   { sheep:6, brave:4, stone:7, name:"Hard ⭐⭐⭐", confetti:120, slingHits:4 }
     };
 
+    const aimKinds = {
+      goliath:{
+        target:"assets/goliath-face.jpg", targetName:"Goliath",
+        weapon:"assets/slingshot.jpg", projectile:null, cane:false,
+        hint:"Drag the stone back, then let go!",
+        win:"You hit Goliath! God gave David the win! 🎉",
+        btn:"🎯 Sling!"
+      },
+      lion:{
+        target:"assets/lion-face.jpg", targetName:"the lion",
+        weapon:null, projectile:"assets/cane.jpg", cane:true,
+        hint:"Drag the cane back, then let go at the lion!",
+        win:"You saved the sheep from the lion! God helped David! 🎉",
+        btn:"🎯 Cane!"
+      },
+      bear:{
+        target:"assets/bear-face.jpg", targetName:"the bear",
+        weapon:null, projectile:"assets/cane.jpg", cane:true,
+        hint:"Drag the cane back, then let go at the bear!",
+        win:"You saved the sheep from the bear! God helped David! 🎉",
+        btn:"🎯 Cane!"
+      }
+    };
+
     let current=0, level="medium", muted=false, masterVol=0.7, slingHits=0, slingNeeded=3;
-    let pendingTimers=[], slingBound=false, slingDrag=null, videoDone=false;
+    let pendingTimers=[], slingBound=false, slingDrag=null, videoDone=false, currentAim="goliath";
 
     const video=document.getElementById("video");
     const progressBar=document.getElementById("progress-bar");
@@ -270,7 +296,10 @@
       clearAudio();
       mini.classList.remove("active");
       slingGame.classList.remove("active");
-      slingBtn.style.display=sc.sling?"block":"none";
+      if(sc.aim){
+        slingBtn.style.display="block";
+        slingBtn.textContent=aimKinds[sc.aim].btn;
+      } else slingBtn.style.display="none";
       video.src=sc.file;
       sceneLabel.textContent=`Scene ${current+1} of ${scenes.length} • ${sc.label}`;
       lightStars(current);
@@ -293,14 +322,14 @@
       if(!videoDone) return;
       if(mini.classList.contains("active") || slingGame.classList.contains("active")) return;
       if(sc.mini) startMini(sc.mini);
-      else if(sc.sling) startSling();
+      else if(sc.aim) startAim(sc.aim);
       else showScene(current+1);
     }
 
     function goForward(){
       const sc=scenes[current];
       if(sc.mini && !mini.classList.contains("active")) startMini(sc.mini);
-      else if(sc.sling && !slingGame.classList.contains("active")) startSling();
+      else if(sc.aim && !slingGame.classList.contains("active")) startAim(sc.aim);
       else showScene(current+1);
     }
 
@@ -330,13 +359,15 @@
     }
     miniNext.onclick=()=>{mini.classList.remove("active");showScene(current+1)};
 
-    function startSling(){
+    function startAim(kind){
+      currentAim=kind;
+      const cfg=aimKinds[kind];
       clearAudio();
       slingGame.classList.add("active");
       slingNext.classList.remove("show");
       slingHits=0;slingNeeded=levels[level].slingHits;
       slingScore.textContent=`Hits: 0 / ${slingNeeded}`;
-      slingHint.textContent="Drag the stone back, then let go to aim at Goliath! 🪨";
+      slingHint.textContent=cfg.hint;
       slingHint.classList.add("hint-pulse");
       buildSling();
     }
@@ -362,20 +393,24 @@
     }
     function buildSling(){
       bindSlingOnce();
+      const cfg=aimKinds[currentAim];
       slingCanvas.innerHTML="";
       const g=document.createElement("div");
       g.className="goliath-target";
-      g.innerHTML='<img src="assets/goliath-face.jpg" alt="Goliath">';
+      g.innerHTML=`<img src="${cfg.target}" alt="${cfg.targetName}">`;
       slingCanvas.appendChild(g);
-      const base=document.createElement("div");
-      base.className="sling-base";
-      base.innerHTML='<img src="assets/slingshot.jpg" alt="Slingshot">';
-      slingCanvas.appendChild(base);
+      if(cfg.weapon){
+        const base=document.createElement("div");
+        base.className="sling-base";
+        base.innerHTML=`<img src="${cfg.weapon}" alt="">`;
+        slingCanvas.appendChild(base);
+      }
       const stone=document.createElement("div");
-      stone.className="stone-proj";
-      stone.textContent="🪨";
-      stone.style.left="12%";
-      stone.style.top="62%";
+      stone.className="stone-proj"+(cfg.cane?" cane":"");
+      if(cfg.projectile) stone.innerHTML=`<img src="${cfg.projectile}" alt="cane">`;
+      else stone.textContent="🪨";
+      stone.style.left=cfg.cane?"8%":"12%";
+      stone.style.top=cfg.cane?"48%":"62%";
       stone.style.transition="none";
       slingCanvas.appendChild(stone);
       let dragging=false, launched=false;
@@ -406,7 +441,7 @@
         setTimeout(()=>g.style.transform="",220);
         slingScore.textContent=`Hits: ${slingHits} / ${slingNeeded}`;
         if(slingHits>=slingNeeded){
-          slingHint.textContent="You hit Goliath! God gave David the win! 🎉";
+          slingHint.textContent=cfg.win;
           slingNext.classList.add("show");
           slingDrag=null;
         } else {
@@ -442,7 +477,7 @@
       };
     }
     slingNext.onclick=()=>{slingGame.classList.remove("active");showScene(current+1)};
-    slingBtn.onclick=()=>startSling();
+    slingBtn.onclick=()=>{const sc=scenes[current]; if(sc.aim) startAim(sc.aim)};
 
     document.getElementById("start-btn").onclick=()=>{
       showScreen("level-screen");
