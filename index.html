@@ -44,7 +44,7 @@
     #mini.active{display:flex}
     #mini h2{font-size:clamp(1.6rem,4.5vw,2.2rem);color:var(--brown);margin-bottom:16px}
     #mini-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;max-width:720px;margin-bottom:24px}
-    .tap-item{width:120px;height:120px;border-radius:50%;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;
+    .tap-item{width:clamp(72px,18vw,110px);height:clamp(72px,18vw,110px);border-radius:50%;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;
       font-size:3.5rem;cursor:pointer;transition:transform .12s;border:5px solid #FFE0B2}
     .tap-item img{width:88%;height:88%;object-fit:cover;object-position:center 18%;border-radius:50%}
     .tap-item:active{transform:scale(.88)}.tap-item.done{background:#C8E6C9;border-color:var(--green);transform:scale(1.04)}
@@ -173,9 +173,9 @@
     };
 
     const levels = {
-      easy:   { sheep:2, brave:2, stone:3, name:"Easy ⭐", confetti:60, slingHits:2 },
-      medium: { sheep:4, brave:3, stone:5, name:"Medium ⭐⭐", confetti:90, slingHits:3 },
-      hard:   { sheep:6, brave:4, stone:7, name:"Hard ⭐⭐⭐", confetti:120, slingHits:4 }
+      easy:   { sheep:2, brave:10, stone:3, name:"Easy ⭐", confetti:60, slingHits:2 },
+      medium: { sheep:4, brave:10, stone:5, name:"Medium ⭐⭐", confetti:90, slingHits:3 },
+      hard:   { sheep:6, brave:10, stone:7, name:"Hard ⭐⭐⭐", confetti:120, slingHits:4 }
     };
 
     const aimKinds = {
@@ -339,7 +339,7 @@
       const cfg=levels[level];
       let needed=0,done=0;
       if(type==="sheep"){needed=cfg.sheep;miniTitle.textContent=`Tap the happy sheep! (${needed}) 🐑`}
-      else if(type==="brave"){needed=cfg.brave;miniTitle.textContent=`Tap brave David! (${needed})`}
+      else if(type==="brave"){needed=10;miniTitle.textContent=`Tap brave David! (10)`}
       else if(type==="stone"){needed=cfg.stone;miniTitle.textContent=`Pick smooth stones! (${needed}) 🪨`}
 
       function item(content,isImg=false){
