@@ -145,11 +145,9 @@
   </div>
 
   <audio id="bg-music" loop preload="auto" src="assets/audio/soft_harp_bg.mp3"></audio>
-  <audio id="birds" loop preload="auto" src="assets/audio/birds_ambient.mp3"></audio>
   <audio id="harp-note" preload="auto" src="assets/audio/harp_note.mp3"></audio>
   <audio id="sfx" preload="auto"></audio>
   <audio id="celebrate" preload="auto" src="assets/audio/celebrate.mp3"></audio>
-  <audio id="tweet" preload="auto" src="assets/audio/bird_tweet.mp3"></audio>
 
   <script>
     const scenes = [
@@ -164,7 +162,7 @@
 
     const charInfo = {
       jesse:{emoji:"👴",name:"Jesse",color:"#8D6E63"},
-      david:{emoji:"🧑",name:"David",color:"#42A5F5"},
+      david:{emoji:"",img:"assets/david-face.jpg",name:"David",color:"#42A5F5"},
       sheep:{emoji:"🐑",name:"Sheep",color:"#FFF"},
       lion:{emoji:"🦁",name:"Lion",color:"#FFB74D"},
       bear:{emoji:"🐻",name:"Bear",color:"#8D6E63"},
@@ -191,11 +189,9 @@
     const miniTitle=document.getElementById("mini-title");
     const miniNext=document.getElementById("mini-next");
     const bgMusic=document.getElementById("bg-music");
-    const birds=document.getElementById("birds");
     const harpNote=document.getElementById("harp-note");
     const sfx=document.getElementById("sfx");
     const celebrate=document.getElementById("celebrate");
-    const tweet=document.getElementById("tweet");
     const volSlider=document.getElementById("vol-slider");
     const levelBadge=document.getElementById("level-badge");
     const charStrip=document.getElementById("char-strip");
@@ -210,12 +206,11 @@
 
     function applyAmbientVolume(){
       bgMusic.volume = masterVol * 0.28;
-      birds.volume = masterVol * 0.22;
     }
     function setVolume(v){
       masterVol=v;
       sfx.volume=v*0.8;
-      harpNote.volume=v*0.65; celebrate.volume=v*0.9; tweet.volume=v*0.45;
+      harpNote.volume=v*0.65; celebrate.volume=v*0.9;
       applyAmbientVolume();
     }
     setVolume(0.7);
@@ -426,7 +421,7 @@
 
     document.getElementById("start-btn").onclick=()=>{
       showScreen("level-screen");
-      if(!muted){bgMusic.play().catch(()=>{});birds.play().catch(()=>{})}
+      if(!muted){bgMusic.play().catch(()=>{})}
     };
     document.querySelectorAll("[data-level]").forEach(btn=>{
       btn.onclick=()=>{
@@ -446,17 +441,17 @@
     };
     document.getElementById("restart-btn").onclick=()=>{
       showScreen("player-area");
-      if(!muted){bgMusic.currentTime=0;bgMusic.play().catch(()=>{});birds.play().catch(()=>{})}
+      if(!muted){bgMusic.currentTime=0;bgMusic.play().catch(()=>{})}
       showScene(0);
     };
     document.getElementById("change-level-btn").onclick=()=>{clearAudio();showScreen("level-screen")};
 
     document.getElementById("mute-btn").onclick=()=>{
       muted=!muted;document.getElementById("mute-btn").textContent=muted?"🔇":"🔊";
-      [bgMusic,birds,sfx,harpNote,celebrate,tweet,video].forEach(a=>a.muted=muted);
+      [bgMusic,sfx,harpNote,celebrate,video].forEach(a=>a.muted=muted);
       if(muted) stopEl(sfx);
       applyAmbientVolume();
-      if(!muted){bgMusic.play().catch(()=>{});birds.play().catch(()=>{})}
+      if(!muted){bgMusic.play().catch(()=>{})}
     };
 
     function showEnd(){
