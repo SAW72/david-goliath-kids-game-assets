@@ -30,8 +30,8 @@
     #level-screen p{font-size:1.2rem;color:#5D4037;margin-bottom:24px;text-align:center;max-width:400px}
     #level-btns{display:flex;flex-direction:column;gap:14px;align-items:center}
     #player-area{padding:env(safe-area-inset-top) 10px 10px;justify-content:flex-start}
-    #video-wrap{position:relative;width:100%;max-height:46vh;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.28);background:#111}
-    video{width:100%;max-height:46vh;display:block;object-fit:contain;background:#000}
+    #video-wrap{position:relative;width:100%;max-height:58vh;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.28);background:#111}
+    video{width:100%;max-height:58vh;display:block;object-fit:contain;background:#000}
     #progress-bar{position:absolute;bottom:0;left:0;height:6px;background:linear-gradient(90deg,var(--orange),var(--green));width:0%;transition:width .2s}
     #stars{display:flex;gap:8px;margin:8px 0 4px;font-size:1.6rem}
     .star{opacity:.25;transition:all .35s;filter:grayscale(1)}.star.lit{opacity:1;filter:none;transform:scale(1.15)}
@@ -40,12 +40,6 @@
     #memory{position:absolute;bottom:80px;left:50%;transform:translateX(-50%) scale(.85);background:rgba(255,255,255,.95);padding:12px 28px;border-radius:40px;
       font-size:clamp(1.1rem,3.5vw,1.45rem);font-weight:900;color:#1565C0;box-shadow:0 6px 20px rgba(0,0,0,.12);opacity:0;transition:all .45s;white-space:nowrap;pointer-events:none}
     #memory.show{opacity:1;transform:translateX(-50%) scale(1)}
-    #caption{width:min(92vw,720px);min-height:4.6rem;margin:10px auto 0;padding:10px 16px;border-radius:18px;
-      background:rgba(255,255,255,.95);box-shadow:0 6px 18px rgba(0,0,0,.12);text-align:center;
-      opacity:.55;transform:translateY(4px);transition:opacity .25s,transform .25s}
-    #caption.show{opacity:1;transform:none}
-    #caption .who{font-size:.8rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#E65100;margin-bottom:2px}
-    #caption .line{font-size:clamp(1.15rem,3.6vw,1.5rem);font-weight:800;color:var(--brown);line-height:1.3}
     #mini{position:absolute;inset:0;z-index:50;background:rgba(255,248,225,.97);flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;display:none}
     #mini.active{display:flex}
     #mini h2{font-size:clamp(1.6rem,4.5vw,2.2rem);color:var(--brown);margin-bottom:16px}
@@ -116,10 +110,6 @@
         <video id="video" playsinline webkit-playsinline></video>
         <div id="progress-bar"></div>
       </div>
-      <div id="caption">
-        <div class="who" id="caption-who">Story</div>
-        <div class="line" id="caption-line">Listen…</div>
-      </div>
       <div id="controls">
         <button class="big-btn btn-green" id="next-btn">Next ▶</button>
         <button class="big-btn btn-blue" id="replay-btn">🔄 Again</button>
@@ -153,84 +143,19 @@
   <audio id="bg-music" loop preload="auto" src="assets/audio/soft_harp_bg.mp3"></audio>
   <audio id="birds" loop preload="auto" src="assets/audio/birds_ambient.mp3"></audio>
   <audio id="harp-note" preload="auto" src="assets/audio/harp_note.mp3"></audio>
-  <audio id="voice" preload="auto"></audio>
   <audio id="sfx" preload="auto"></audio>
   <audio id="celebrate" preload="auto" src="assets/audio/celebrate.mp3"></audio>
   <audio id="tweet" preload="auto" src="assets/audio/bird_tweet.mp3"></audio>
 
   <script>
     const scenes = [
-      {
-        file:"videos/08-jesse-sends-david.mp4",
-        label:"Jesse sends David",
-        chars:["jesse","david"],
-        mini:null, sling:false,
-        lines:[
-          {kind:"narr", src:"assets/audio/narr_jesse.mp3", who:"Story", text:"This is Jesse. He is David’s daddy. He asked David to take food to his brothers.", char:null},
-          {kind:"char", src:"assets/audio/jesse_voice.mp3", who:"Jesse", text:"David, please take this bread to your brothers.", char:"jesse"}
-        ]
-      },
-      {
-        file:"videos/03-david-with-sheep.mp4",
-        label:"David & the Sheep",
-        chars:["david","sheep"],
-        mini:"sheep", sling:false,
-        lines:[
-          {kind:"narr", src:"assets/audio/narr_sheep.mp3", who:"Story", text:"David took care of the sheep. He was a good shepherd.", char:"david"},
-          {kind:"sfx", src:"assets/audio/sheep_baa.mp3", who:"Sheep", text:"Baa!", char:"sheep"}
-        ]
-      },
-      {
-        file:"videos/05-david-fights-lion.mp4",
-        label:"David & the Lion",
-        chars:["david","lion"],
-        mini:null, sling:false,
-        lines:[
-          {kind:"narr", src:"assets/audio/narr_lion.mp3", who:"Story", text:"A lion came to take a sheep. David saved it. God helped David.", char:"david"},
-          {kind:"sfx", src:"assets/audio/lion_soft.mp3", who:"Lion", text:"God helped David be brave.", char:"lion"}
-        ]
-      },
-      {
-        file:"videos/06-david-fights-bear.mp4",
-        label:"David & the Bear",
-        chars:["david","bear"],
-        mini:null, sling:false,
-        lines:[
-          {kind:"narr", src:"assets/audio/narr_bear.mp3", who:"Story", text:"A bear came too. David saved the sheep again. God helped David.", char:"david"},
-          {kind:"sfx", src:"assets/audio/bear_soft.mp3", who:"Bear", text:"God helped David again.", char:"bear"}
-        ]
-      },
-      {
-        file:"videos/07-david-tells-saul-lion-bear.mp4",
-        label:"David tells Saul",
-        chars:["david","saul"],
-        mini:"brave", sling:false,
-        lines:[
-          {kind:"narr", src:"assets/audio/narr_saul.mp3", who:"Story", text:"David told King Saul that God already helped him.", char:null},
-          {kind:"char", src:"assets/audio/david_saul.mp3", who:"David", text:"The Lord saved me from the lion and the bear. He will help me now.", char:"david"},
-          {kind:"char", src:"assets/audio/saul_voice.mp3", who:"Saul", text:"Go, David. The Lord be with you.", char:"saul"}
-        ]
-      },
-      {
-        file:"videos/02-goliath-philistine-champion.mp4",
-        label:"Goliath challenges",
-        chars:["goliath","david"],
-        mini:null, sling:true,
-        lines:[
-          {kind:"narr", src:"assets/audio/narr_goliath.mp3", who:"Story", text:"Goliath was a very big man. He said mean things about God. But God is stronger.", char:null},
-          {kind:"char", src:"assets/audio/goliath_challenge.mp3", who:"Goliath", text:"Who will come fight me?", char:"goliath"}
-        ]
-      },
-      {
-        file:"videos/04-david-vs-goliath-victory.mp4",
-        label:"Victory!",
-        chars:["david"],
-        mini:null, sling:false,
-        lines:[
-          {kind:"narr", src:"assets/audio/narr_victory.mp3", who:"Story", text:"David trusted God. God won the battle!", char:"david"},
-          {kind:"char", src:"assets/audio/david_victory.mp3", who:"David", text:"The battle is the LORD’s!", char:"david"}
-        ]
-      }
+      {file:"videos/08-jesse-sends-david.mp4", label:"Jesse sends David", chars:["jesse","david"], mini:null, sling:false},
+      {file:"videos/03-david-with-sheep.mp4", label:"David & the Sheep", chars:["david","sheep"], mini:"sheep", sling:false},
+      {file:"videos/05-david-fights-lion.mp4", label:"David & the Lion", chars:["david","lion"], mini:null, sling:false},
+      {file:"videos/06-david-fights-bear.mp4", label:"David & the Bear", chars:["david","bear"], mini:null, sling:false},
+      {file:"videos/07-david-tells-saul-lion-bear.mp4", label:"David tells Saul", chars:["david","saul"], mini:"brave", sling:false},
+      {file:"videos/02-goliath-philistine-champion.mp4", label:"Goliath challenges", chars:["goliath","david"], mini:null, sling:true},
+      {file:"videos/04-david-vs-goliath-victory.mp4", label:"Victory!", chars:["david"], mini:null, sling:false}
     ];
 
     const charInfo = {
@@ -244,13 +169,13 @@
     };
 
     const levels = {
-      easy:   { sheep:2, brave:2, stone:3, name:"Easy ⭐", delay:700, confetti:60, slingHits:2, gap:700 },
-      medium: { sheep:4, brave:3, stone:5, name:"Medium ⭐⭐", delay:500, confetti:90, slingHits:3, gap:550 },
-      hard:   { sheep:6, brave:4, stone:7, name:"Hard ⭐⭐⭐", delay:350, confetti:120, slingHits:4, gap:400 }
+      easy:   { sheep:2, brave:2, stone:3, name:"Easy ⭐", confetti:60, slingHits:2 },
+      medium: { sheep:4, brave:3, stone:5, name:"Medium ⭐⭐", confetti:90, slingHits:3 },
+      hard:   { sheep:6, brave:4, stone:7, name:"Hard ⭐⭐⭐", confetti:120, slingHits:4 }
     };
 
     let current=0, level="medium", muted=false, masterVol=0.7, slingHits=0, slingNeeded=3;
-    let voiceToken=0, speaking=false, pendingTimers=[], slingBound=false, slingDrag=null, videoDone=false;
+    let pendingTimers=[], slingBound=false, slingDrag=null, videoDone=false;
 
     const video=document.getElementById("video");
     const progressBar=document.getElementById("progress-bar");
@@ -264,7 +189,6 @@
     const bgMusic=document.getElementById("bg-music");
     const birds=document.getElementById("birds");
     const harpNote=document.getElementById("harp-note");
-    const voice=document.getElementById("voice");
     const sfx=document.getElementById("sfx");
     const celebrate=document.getElementById("celebrate");
     const tweet=document.getElementById("tweet");
@@ -277,20 +201,16 @@
     const slingScore=document.getElementById("sling-score");
     const slingNext=document.getElementById("sling-next");
     const slingHint=document.getElementById("sling-hint");
-    const caption=document.getElementById("caption");
-    const captionWho=document.getElementById("caption-who");
-    const captionLine=document.getElementById("caption-line");
 
     scenes.forEach((_,i)=>{const s=document.createElement("span");s.className="star";s.textContent="⭐";s.id="star-"+i;starsEl.appendChild(s)});
 
     function applyAmbientVolume(){
-      const duck = speaking && !muted ? 0.07 : 1;
-      bgMusic.volume = masterVol * 0.28 * duck;
-      birds.volume = masterVol * 0.22 * duck;
+      bgMusic.volume = masterVol * 0.28;
+      birds.volume = masterVol * 0.22;
     }
     function setVolume(v){
       masterVol=v;
-      voice.volume=v*0.98; sfx.volume=v*0.8;
+      sfx.volume=v*0.8;
       harpNote.volume=v*0.65; celebrate.volume=v*0.9; tweet.volume=v*0.45;
       applyAmbientVolume();
     }
@@ -316,57 +236,9 @@
       try{el.load()}catch(_){}
     }
     function clearAudio(){
-      voiceToken++;
-      speaking=false;
       pendingTimers.forEach(clearTimeout);
       pendingTimers=[];
-      stopEl(voice); stopEl(sfx);
-      applyAmbientVolume();
-    }
-    function setCaption(who, text, on){
-      captionWho.textContent=who||"Story";
-      captionLine.textContent=text||"";
-      caption.classList.toggle("show", !!on);
-    }
-    function highlightChar(id){
-      document.querySelectorAll(".char-card").forEach(c=>c.classList.toggle("active", !!id && c.dataset.char===id));
-    }
-    function playOne(el, src){
-      return new Promise(resolve=>{
-        if(muted || !src){resolve();return}
-        stopEl(el);
-        const done=()=>{el.onended=null;el.onerror=null;resolve()};
-        el.onended=done;
-        el.onerror=done;
-        el.src=src;
-        const p=el.play();
-        if(p && p.catch) p.catch(()=>done());
-      });
-    }
-    async function playLines(lines){
-      const token=++voiceToken;
-      const gap=levels[level].gap;
-      for(let i=0;i<lines.length;i++){
-        if(token!==voiceToken) return;
-        const line=lines[i];
-        setCaption(line.who, line.text, true);
-        highlightChar(line.char);
-        speaking=true;
-        applyAmbientVolume();
-        const el = line.kind==="sfx" ? sfx : voice;
-        await playOne(el, line.src);
-        if(token!==voiceToken) return;
-        speaking=false;
-        applyAmbientVolume();
-        if(i<lines.length-1){
-          await new Promise(r=>later(r, gap));
-        }
-      }
-      if(token!==voiceToken) return;
-      highlightChar(null);
-      speaking=false;
-      applyAmbientVolume();
-      maybeContinue();
+      stopEl(sfx);
     }
 
     function renderCharStrip(chars){
@@ -404,17 +276,10 @@
       lightStars(current);
       memory.classList.toggle("show", current===scenes.length-1);
       renderCharStrip(sc.chars);
-      const first=sc.lines[0];
-      setCaption(first.who, first.text, true);
       progressBar.style.width="0%";
+      video.muted=muted;
       video.load();
       video.play().catch(()=>{});
-      later(()=>{
-        playLines(sc.lines);
-        if(!muted && Math.random()>0.55) later(()=>{
-          if(!speaking && !muted){tweet.currentTime=0;tweet.play().catch(()=>{})}
-        }, 1800);
-      }, levels[level].delay);
     }
 
     video.addEventListener("timeupdate",()=>{if(video.duration)progressBar.style.width=(video.currentTime/video.duration*100)+"%"});
@@ -425,7 +290,7 @@
 
     function maybeContinue(){
       const sc=scenes[current];
-      if(!videoDone || speaking) return;
+      if(!videoDone) return;
       if(mini.classList.contains("active") || slingGame.classList.contains("active")) return;
       if(sc.mini) startMini(sc.mini);
       else if(sc.sling) startSling();
@@ -570,11 +435,10 @@
     });
     document.getElementById("next-btn").onclick=goForward;
     document.getElementById("replay-btn").onclick=()=>{
-      const sc=scenes[current];
       clearAudio();
       video.currentTime=0;
+      video.muted=muted;
       video.play().catch(()=>{});
-      later(()=>playLines(sc.lines), 250);
     };
     document.getElementById("restart-btn").onclick=()=>{
       showScreen("player-area");
@@ -585,8 +449,8 @@
 
     document.getElementById("mute-btn").onclick=()=>{
       muted=!muted;document.getElementById("mute-btn").textContent=muted?"🔇":"🔊";
-      [bgMusic,birds,voice,sfx,harpNote,celebrate,tweet].forEach(a=>a.muted=muted);
-      if(muted){speaking=false;stopEl(voice);stopEl(sfx)}
+      [bgMusic,birds,sfx,harpNote,celebrate,tweet,video].forEach(a=>a.muted=muted);
+      if(muted) stopEl(sfx);
       applyAmbientVolume();
       if(!muted){bgMusic.play().catch(()=>{});birds.play().catch(()=>{})}
     };
