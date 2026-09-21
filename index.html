@@ -249,6 +249,41 @@
       sheepVoices.forEach(a=>{ try{ a.pause(); }catch(_){} try{ a.currentTime = 0; }catch(_){} });
     }
 
+    // Soft lion/bear clips already in assets. Pool like the sheep baas so a
+    // quick second hit can start cleanly, but only one growl plays at a time.
+    function makeSoftPool(src, size){
+      const voices = Array.from({length:size}, () => {
+        const a = new Audio(src);
+        a.preload = "auto";
+        return a;
+      });
+      let i = 0;
+      return {
+        voices,
+        play(){
+          if(muted) return;
+          const a = voices[i % voices.length];
+          i++;
+          voices.forEach(b=>{
+            if(b!==a){ try{ b.pause(); }catch(_){} try{ b.currentTime = 0; }catch(_){} }
+          });
+          a.muted = false;
+          a.volume = Math.min(1, masterVol);
+          try{ a.currentTime = 0; }catch(_){}
+          a.play().catch(()=>{});
+        },
+        stop(){
+          voices.forEach(a=>{ try{ a.pause(); }catch(_){} try{ a.currentTime = 0; }catch(_){} });
+        }
+      };
+    }
+    const lionGrowl = makeSoftPool("assets/audio/lion_soft.mp3", 2);
+    const bearGrowl = makeSoftPool("assets/audio/bear_soft.mp3", 2);
+    function eachGrowlVoice(fn){
+      lionGrowl.voices.forEach(fn);
+      bearGrowl.voices.forEach(fn);
+    }
+
     function applyAmbientVolume(){
       bgMusic.volume = masterVol * 0.18;
     }
@@ -257,6 +292,7 @@
       sfx.volume=v*0.8;
       harpNote.volume=v*0.65; celebrate.volume=v*0.9;
       sheepVoices.forEach(a=>{ a.volume = Math.min(1, v); });
+      eachGrowlVoice(a=>{ a.volume = Math.min(1, v); });
       applyAmbientVolume();
     }
     setVolume(0.7);
@@ -285,6 +321,8 @@
       pendingTimers=[];
       stopEl(sfx);
       stopSheepVoices();
+      lionGrowl.stop();
+      bearGrowl.stop();
     }
 
     function renderCharStrip(chars){
@@ -457,7 +495,9 @@
       }
       function scoreHit(){
         slingHits++;
-        if(!muted){harpNote.currentTime=0;harpNote.play().catch(()=>{})}
+        if(currentAim==="lion") lionGrowl.play();
+        else if(currentAim==="bear") bearGrowl.play();
+        else if(!muted){harpNote.currentTime=0;harpNote.play().catch(()=>{})}
         g.style.transform="scale(1.18) rotate(8deg)";
         setTimeout(()=>g.style.transform="",220);
         slingScore.textContent=`Hits: ${slingHits} / ${slingNeeded}`;
@@ -531,7 +571,8 @@
       muted=!muted;document.getElementById("mute-btn").textContent=muted?"🔇":"🔊";
       [bgMusic,sfx,harpNote,celebrate,video].forEach(a=>a.muted=muted);
       sheepVoices.forEach(a=>{ a.muted = muted; });
-      if(muted){ stopEl(sfx); stopSheepVoices(); }
+      eachGrowlVoice(a=>{ a.muted = muted; });
+      if(muted){ stopEl(sfx); stopSheepVoices(); lionGrowl.stop(); bearGrowl.stop(); }
       applyAmbientVolume();
       if(!muted){bgMusic.play().catch(()=>{})}
     };
